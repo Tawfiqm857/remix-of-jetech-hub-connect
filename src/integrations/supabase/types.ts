@@ -429,6 +429,56 @@ export type Database = {
         }
         Relationships: []
       }
+      student_achievements: {
+        Row: {
+          achievement_type: string
+          awarded_at: string
+          created_at: string
+          description: string | null
+          enrollment_id: string | null
+          grade: string | null
+          id: string
+          score: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_type: string
+          awarded_at?: string
+          created_at?: string
+          description?: string | null
+          enrollment_id?: string | null
+          grade?: string | null
+          id?: string
+          score?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_type?: string
+          awarded_at?: string
+          created_at?: string
+          description?: string | null
+          enrollment_id?: string | null
+          grade?: string | null
+          id?: string
+          score?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_achievements_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       swaps: {
         Row: {
           additional_info: string | null

@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -32,6 +36,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   ShoppingBag,
   BookOpen,
   Wrench,
@@ -40,6 +53,10 @@ import {
   Trash2,
   RefreshCw,
   Package,
+  Plus,
+  Edit,
+  Award,
+  GraduationCap,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -80,7 +97,10 @@ interface Gadget {
   name: string;
   price: number;
   category: string;
+  description: string | null;
+  image_url: string | null;
   in_stock: boolean;
+  swap_available: boolean;
 }
 
 interface Course {
@@ -89,6 +109,18 @@ interface Course {
   category: string;
   price: number;
   level: string;
+}
+
+interface StudentAchievement {
+  id: string;
+  user_id: string;
+  enrollment_id: string | null;
+  achievement_type: string;
+  title: string;
+  description: string | null;
+  grade: string | null;
+  score: number | null;
+  awarded_at: string;
 }
 
 const Admin = () => {
@@ -101,7 +133,33 @@ const Admin = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [gadgets, setGadgets] = useState<Gadget[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [achievements, setAchievements] = useState<StudentAchievement[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Product Form State
+  const [productDialogOpen, setProductDialogOpen] = useState(false);
+  const [editingGadget, setEditingGadget] = useState<Gadget | null>(null);
+  const [productForm, setProductForm] = useState({
+    name: "",
+    price: "",
+    category: "",
+    description: "",
+    image_url: "",
+    in_stock: true,
+    swap_available: false,
+  });
+
+  // Achievement Form State
+  const [achievementDialogOpen, setAchievementDialogOpen] = useState(false);
+  const [achievementForm, setAchievementForm] = useState({
+    user_id: "",
+    enrollment_id: "",
+    achievement_type: "grade",
+    title: "",
+    description: "",
+    grade: "",
+    score: "",
+  });
 
   useEffect(() => {
     if (!adminLoading && !isAdmin) {
@@ -122,7 +180,7 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     setLoading(true);
-    const [ordersRes, serviceRequestsRes, enrollmentsRes, gadgetsRes, coursesRes] =
+    const [ordersRes, serviceRequestsRes, enrollmentsRes, gadgetsRes, coursesRes, achievementsRes] =
       await Promise.all([
         supabase
           .from("orders")
@@ -138,12 +196,16 @@ const Admin = () => {
           .order("enrolled_at", { ascending: false }),
         supabase
           .from("gadgets")
-          .select("id, name, price, category, in_stock")
+          .select("*")
           .order("created_at", { ascending: false }),
         supabase
           .from("courses")
           .select("id, title, category, price, level")
           .order("created_at", { ascending: false }),
+        supabase
+          .from("student_achievements")
+          .select("*")
+          .order("awarded_at", { ascending: false }),
       ]);
 
     setOrders((ordersRes.data as unknown as Order[]) || []);
@@ -151,9 +213,162 @@ const Admin = () => {
     setEnrollments((enrollmentsRes.data as unknown as Enrollment[]) || []);
     setGadgets((gadgetsRes.data as unknown as Gadget[]) || []);
     setCourses((coursesRes.data as unknown as Course[]) || []);
+    setAchievements((achievementsRes.data as unknown as StudentAchievement[]) || []);
     setLoading(false);
   };
 
+  // Product Management Functions
+  const openAddProduct = () => {
+    setEditingGadget(null);
+    setProductForm({
+      name: "",
+      price: "",
+      category: "",
+      description: "",
+      image_url: "",
+      in_stock: true,
+      swap_available: false,
+    });
+    setProductDialogOpen(true);
+  };
+
+  const openEditProduct = (gadget: Gadget) => {
+    setEditingGadget(gadget);
+    setProductForm({
+      name: gadget.name,
+      price: gadget.price.toString(),
+      category: gadget.category,
+      description: gadget.description || "",
+      image_url: gadget.image_url || "",
+      in_stock: gadget.in_stock,
+      swap_available: gadget.swap_available,
+    });
+    setProductDialogOpen(true);
+  };
+
+  const handleSaveProduct = async () => {
+    const productData = {
+      name: productForm.name,
+      price: parseFloat(productForm.price),
+      category: productForm.category,
+      description: productForm.description || null,
+      image_url: productForm.image_url || null,
+      in_stock: productForm.in_stock,
+      swap_available: productForm.swap_available,
+    };
+
+    if (editingGadget) {
+      const { error } = await supabase
+        .from("gadgets")
+        .update(productData)
+        .eq("id", editingGadget.id);
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to update product", variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: "Product updated successfully" });
+        fetchAllData();
+      }
+    } else {
+      const { error } = await supabase.from("gadgets").insert([productData]);
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to add product", variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: "Product added successfully" });
+        fetchAllData();
+      }
+    }
+    setProductDialogOpen(false);
+  };
+
+  const toggleGadgetStock = async (gadgetId: string, inStock: boolean) => {
+    const { error } = await supabase
+      .from("gadgets")
+      .update({ in_stock: inStock })
+      .eq("id", gadgetId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update stock status", variant: "destructive" });
+    } else {
+      setGadgets((prev) =>
+        prev.map((g) => (g.id === gadgetId ? { ...g, in_stock: inStock } : g))
+      );
+      toast({ title: "Updated", description: `Product marked as ${inStock ? "In Stock" : "Sold"}` });
+    }
+  };
+
+  const toggleSwapAvailable = async (gadgetId: string, swapAvailable: boolean) => {
+    const { error } = await supabase
+      .from("gadgets")
+      .update({ swap_available: swapAvailable })
+      .eq("id", gadgetId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update swap status", variant: "destructive" });
+    } else {
+      setGadgets((prev) =>
+        prev.map((g) => (g.id === gadgetId ? { ...g, swap_available: swapAvailable } : g))
+      );
+      toast({ title: "Updated", description: `Swap ${swapAvailable ? "enabled" : "disabled"}` });
+    }
+  };
+
+  const deleteGadget = async (gadgetId: string) => {
+    const { error } = await supabase.from("gadgets").delete().eq("id", gadgetId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to delete product", variant: "destructive" });
+    } else {
+      setGadgets((prev) => prev.filter((g) => g.id !== gadgetId));
+      toast({ title: "Deleted", description: "Product deleted successfully" });
+    }
+  };
+
+  // Achievement/Grade Management Functions
+  const handleSaveAchievement = async () => {
+    const achievementData = {
+      user_id: achievementForm.user_id,
+      enrollment_id: achievementForm.enrollment_id || null,
+      achievement_type: achievementForm.achievement_type,
+      title: achievementForm.title,
+      description: achievementForm.description || null,
+      grade: achievementForm.grade || null,
+      score: achievementForm.score ? parseInt(achievementForm.score) : null,
+    };
+
+    const { error } = await supabase.from("student_achievements").insert([achievementData]);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to add achievement. Make sure User ID is valid.", variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Achievement added successfully" });
+      setAchievementDialogOpen(false);
+      setAchievementForm({
+        user_id: "",
+        enrollment_id: "",
+        achievement_type: "grade",
+        title: "",
+        description: "",
+        grade: "",
+        score: "",
+      });
+      fetchAllData();
+    }
+  };
+
+  const deleteAchievement = async (achievementId: string) => {
+    const { error } = await supabase.from("student_achievements").delete().eq("id", achievementId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to delete achievement", variant: "destructive" });
+    } else {
+      setAchievements((prev) => prev.filter((a) => a.id !== achievementId));
+      toast({ title: "Deleted", description: "Achievement deleted successfully" });
+    }
+  };
+
+  // Order & Service Request Functions
   const updateOrderStatus = async (orderId: string, status: string) => {
     const { error } = await supabase
       .from("orders")
@@ -205,6 +420,24 @@ const Admin = () => {
     } else {
       setServiceRequests((prev) => prev.filter((r) => r.id !== requestId));
       toast({ title: "Deleted", description: "Service request deleted successfully" });
+    }
+  };
+
+  // Enrollment Management
+  const updateEnrollmentProgress = async (enrollmentId: string, progress: number) => {
+    const status = progress >= 100 ? "completed" : "enrolled";
+    const { error } = await supabase
+      .from("enrollments")
+      .update({ progress, status })
+      .eq("id", enrollmentId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update progress", variant: "destructive" });
+    } else {
+      setEnrollments((prev) =>
+        prev.map((e) => (e.id === enrollmentId ? { ...e, progress, status } : e))
+      );
+      toast({ title: "Updated", description: "Student progress updated" });
     }
   };
 
@@ -266,7 +499,7 @@ const Admin = () => {
             Admin Dashboard
           </h1>
           <p className="text-primary-foreground/80">
-            Manage orders, service requests, courses, and gadgets
+            Manage orders, products, students, and more
           </p>
         </div>
       </section>
@@ -274,7 +507,7 @@ const Admin = () => {
       {/* Stats */}
       <section className="py-6 bg-background border-b">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <Card className="border-border/50">
               <CardContent className="p-4 text-center">
                 <ShoppingBag className="w-6 h-6 text-accent mx-auto mb-2" />
@@ -300,7 +533,7 @@ const Admin = () => {
               <CardContent className="p-4 text-center">
                 <Package className="w-6 h-6 text-accent mx-auto mb-2" />
                 <p className="text-xl font-heading font-bold">{gadgets.length}</p>
-                <p className="text-muted-foreground text-sm">Gadgets</p>
+                <p className="text-muted-foreground text-sm">Products</p>
               </CardContent>
             </Card>
             <Card className="border-border/50">
@@ -308,6 +541,13 @@ const Admin = () => {
                 <BookOpen className="w-6 h-6 text-accent mx-auto mb-2" />
                 <p className="text-xl font-heading font-bold">{courses.length}</p>
                 <p className="text-muted-foreground text-sm">Courses</p>
+              </CardContent>
+            </Card>
+            <Card className="border-border/50">
+              <CardContent className="p-4 text-center">
+                <Award className="w-6 h-6 text-accent mx-auto mb-2" />
+                <p className="text-xl font-heading font-bold">{achievements.length}</p>
+                <p className="text-muted-foreground text-sm">Achievements</p>
               </CardContent>
             </Card>
           </div>
@@ -320,9 +560,10 @@ const Admin = () => {
           <Tabs defaultValue="orders" className="w-full">
             <TabsList className="w-full md:w-auto mb-6 flex-wrap h-auto gap-1">
               <TabsTrigger value="orders">Orders</TabsTrigger>
-              <TabsTrigger value="service-requests">Service Requests</TabsTrigger>
-              <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
-              <TabsTrigger value="gadgets">Gadgets</TabsTrigger>
+              <TabsTrigger value="service-requests">Services</TabsTrigger>
+              <TabsTrigger value="enrollments">Students</TabsTrigger>
+              <TabsTrigger value="gadgets">Products</TabsTrigger>
+              <TabsTrigger value="achievements">Grades</TabsTrigger>
               <TabsTrigger value="courses">Courses</TabsTrigger>
             </TabsList>
 
@@ -515,7 +756,10 @@ const Admin = () => {
             <TabsContent value="enrollments">
               <Card>
                 <CardHeader>
-                  <CardTitle>Course Enrollments</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <GraduationCap className="h-5 w-5" />
+                    Student Enrollments
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -524,8 +768,10 @@ const Admin = () => {
                         <TableRow>
                           <TableHead>Date</TableHead>
                           <TableHead>Course</TableHead>
+                          <TableHead>Student ID</TableHead>
                           <TableHead>Progress</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -535,6 +781,9 @@ const Admin = () => {
                               {formatDate(enrollment.enrolled_at)}
                             </TableCell>
                             <TableCell>{enrollment.courses?.title || "N/A"}</TableCell>
+                            <TableCell className="font-mono text-xs">
+                              {enrollment.user_id.slice(0, 8)}...
+                            </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <div className="w-24 bg-secondary rounded-full h-2">
@@ -551,6 +800,27 @@ const Admin = () => {
                                 {enrollment.status}
                               </Badge>
                             </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Select
+                                  value={enrollment.progress.toString()}
+                                  onValueChange={(value) =>
+                                    updateEnrollmentProgress(enrollment.id, parseInt(value))
+                                  }
+                                >
+                                  <SelectTrigger className="w-24">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {[0, 25, 50, 75, 100].map((p) => (
+                                      <SelectItem key={p} value={p.toString()}>
+                                        {p}%
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -565,11 +835,137 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
-            {/* Gadgets Tab */}
+            {/* Gadgets/Products Tab */}
             <TabsContent value="gadgets">
               <Card>
-                <CardHeader>
-                  <CardTitle>Gadgets Inventory</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Products Management</CardTitle>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={fetchAllData}>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh
+                    </Button>
+                    <Dialog open={productDialogOpen} onOpenChange={setProductDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" onClick={openAddProduct}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Product
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {editingGadget ? "Edit Product" : "Add New Product"}
+                          </DialogTitle>
+                          <DialogDescription>
+                            {editingGadget
+                              ? "Update product details below"
+                              : "Fill in the details for the new product"}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="name">Product Name</Label>
+                            <Input
+                              id="name"
+                              value={productForm.name}
+                              onChange={(e) =>
+                                setProductForm({ ...productForm, name: e.target.value })
+                              }
+                              placeholder="iPhone 15 Pro Max"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                              <Label htmlFor="price">Price (₦)</Label>
+                              <Input
+                                id="price"
+                                type="number"
+                                value={productForm.price}
+                                onChange={(e) =>
+                                  setProductForm({ ...productForm, price: e.target.value })
+                                }
+                                placeholder="850000"
+                              />
+                            </div>
+                            <div className="grid gap-2">
+                              <Label htmlFor="category">Category</Label>
+                              <Select
+                                value={productForm.category}
+                                onValueChange={(value) =>
+                                  setProductForm({ ...productForm, category: value })
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Phones">Phones</SelectItem>
+                                  <SelectItem value="Laptops">Laptops</SelectItem>
+                                  <SelectItem value="Accessories">Accessories</SelectItem>
+                                  <SelectItem value="Tablets">Tablets</SelectItem>
+                                  <SelectItem value="Audio">Audio</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea
+                              id="description"
+                              value={productForm.description}
+                              onChange={(e) =>
+                                setProductForm({ ...productForm, description: e.target.value })
+                              }
+                              placeholder="Product description..."
+                              rows={3}
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="image_url">Image URL</Label>
+                            <Input
+                              id="image_url"
+                              value={productForm.image_url}
+                              onChange={(e) =>
+                                setProductForm({ ...productForm, image_url: e.target.value })
+                              }
+                              placeholder="https://..."
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                id="in_stock"
+                                checked={productForm.in_stock}
+                                onCheckedChange={(checked) =>
+                                  setProductForm({ ...productForm, in_stock: checked })
+                                }
+                              />
+                              <Label htmlFor="in_stock">In Stock</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                id="swap_available"
+                                checked={productForm.swap_available}
+                                onCheckedChange={(checked) =>
+                                  setProductForm({ ...productForm, swap_available: checked })
+                                }
+                              />
+                              <Label htmlFor="swap_available">Swap Available</Label>
+                            </div>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setProductDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleSaveProduct}>
+                            {editingGadget ? "Update" : "Add"} Product
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -580,6 +976,8 @@ const Admin = () => {
                           <TableHead>Category</TableHead>
                           <TableHead>Price</TableHead>
                           <TableHead>Stock</TableHead>
+                          <TableHead>Swap</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -593,16 +991,280 @@ const Admin = () => {
                               {formatPrice(gadget.price)}
                             </TableCell>
                             <TableCell>
-                              <Badge variant={gadget.in_stock ? "default" : "destructive"}>
-                                {gadget.in_stock ? "In Stock" : "Out of Stock"}
-                              </Badge>
+                              <Switch
+                                checked={gadget.in_stock}
+                                onCheckedChange={(checked) =>
+                                  toggleGadgetStock(gadget.id, checked)
+                                }
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Switch
+                                checked={gadget.swap_available}
+                                onCheckedChange={(checked) =>
+                                  toggleSwapAvailable(gadget.id, checked)
+                                }
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditProduct(gadget)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="text-destructive"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Product?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteGadget(gadget.id)}
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
                     {gadgets.length === 0 && (
-                      <p className="text-center text-muted-foreground py-8">No gadgets yet</p>
+                      <p className="text-center text-muted-foreground py-8">No products yet</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Achievements/Grades Tab */}
+            <TabsContent value="achievements">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="h-5 w-5" />
+                    Student Grades & Achievements
+                  </CardTitle>
+                  <Dialog open={achievementDialogOpen} onOpenChange={setAchievementDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Achievement
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Add Student Achievement</DialogTitle>
+                        <DialogDescription>
+                          Award a grade, certificate, or achievement to a student
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="user_id">Student User ID</Label>
+                          <Input
+                            id="user_id"
+                            value={achievementForm.user_id}
+                            onChange={(e) =>
+                              setAchievementForm({ ...achievementForm, user_id: e.target.value })
+                            }
+                            placeholder="Enter student's user ID"
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="achievement_type">Type</Label>
+                          <Select
+                            value={achievementForm.achievement_type}
+                            onValueChange={(value) =>
+                              setAchievementForm({ ...achievementForm, achievement_type: value })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="grade">Grade</SelectItem>
+                              <SelectItem value="certificate">Certificate</SelectItem>
+                              <SelectItem value="badge">Badge</SelectItem>
+                              <SelectItem value="milestone">Milestone</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="title">Title</Label>
+                          <Input
+                            id="title"
+                            value={achievementForm.title}
+                            onChange={(e) =>
+                              setAchievementForm({ ...achievementForm, title: e.target.value })
+                            }
+                            placeholder="e.g., Web Development Final Grade"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="grade">Grade</Label>
+                            <Select
+                              value={achievementForm.grade}
+                              onValueChange={(value) =>
+                                setAchievementForm({ ...achievementForm, grade: value })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="A">A (Excellent)</SelectItem>
+                                <SelectItem value="B">B (Good)</SelectItem>
+                                <SelectItem value="C">C (Average)</SelectItem>
+                                <SelectItem value="D">D (Below Average)</SelectItem>
+                                <SelectItem value="F">F (Fail)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="score">Score (0-100)</Label>
+                            <Input
+                              id="score"
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={achievementForm.score}
+                              onChange={(e) =>
+                                setAchievementForm({ ...achievementForm, score: e.target.value })
+                              }
+                              placeholder="85"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            value={achievementForm.description}
+                            onChange={(e) =>
+                              setAchievementForm({ ...achievementForm, description: e.target.value })
+                            }
+                            placeholder="Additional notes..."
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => setAchievementDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button onClick={handleSaveAchievement}>Add Achievement</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Student ID</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Title</TableHead>
+                          <TableHead>Grade</TableHead>
+                          <TableHead>Score</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {achievements.map((achievement) => (
+                          <TableRow key={achievement.id}>
+                            <TableCell className="text-sm">
+                              {formatDate(achievement.awarded_at)}
+                            </TableCell>
+                            <TableCell className="font-mono text-xs">
+                              {achievement.user_id.slice(0, 8)}...
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="capitalize">
+                                {achievement.achievement_type}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-medium">{achievement.title}</TableCell>
+                            <TableCell>
+                              {achievement.grade && (
+                                <Badge
+                                  variant={
+                                    achievement.grade === "A"
+                                      ? "default"
+                                      : achievement.grade === "F"
+                                      ? "destructive"
+                                      : "secondary"
+                                  }
+                                >
+                                  {achievement.grade}
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {achievement.score !== null ? `${achievement.score}%` : "-"}
+                            </TableCell>
+                            <TableCell>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Achievement?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteAchievement(achievement.id)}
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    {achievements.length === 0 && (
+                      <p className="text-center text-muted-foreground py-8">
+                        No achievements yet. Add grades and achievements for students.
+                      </p>
                     )}
                   </div>
                 </CardContent>
