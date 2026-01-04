@@ -110,126 +110,227 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background */}
+        {/* Animated Background with Gradient Mesh */}
         <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop"
-            alt="Tech education"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/60" />
-          <div className="absolute inset-0 african-pattern opacity-5" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,hsl(var(--accent)/0.4)_0%,transparent_50%)]" />
+            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--accent)/0.3)_0%,transparent_50%)]" />
+          </div>
+          
+          {/* Animated Grid Pattern */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }} />
         </div>
         
-        {/* Floating Orbs */}
+        {/* Animated Floating Elements */}
         <motion.div 
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
+          className="absolute top-20 right-20 w-72 h-72 bg-accent/30 rounded-full blur-3xl"
           animate={{ 
-            scale: [1, 1.2, 1],
+            scale: [1, 1.3, 1],
+            x: [0, 30, 0],
             opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div 
-          className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl"
+          className="absolute bottom-40 left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"
           animate={{ 
             scale: [1.2, 1, 1.2],
+            y: [0, -40, 0],
             opacity: [0.2, 0.4, 0.2],
           }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.1, 0.2, 0.1],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        {/* Floating Icons */}
+        <motion.div
+          className="absolute top-1/4 right-1/3 text-accent/40"
+          animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
+          transition={{ duration: 5, repeat: Infinity }}
+        >
+          <GraduationCap className="w-12 h-12" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 text-white/20"
+          animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+        >
+          <Smartphone className="w-10 h-10" />
+        </motion.div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.8 }}
             >
+              {/* Badge */}
               <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white mb-8 backdrop-blur-sm border border-white/20"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/15 text-white mb-8 backdrop-blur-md border border-white/25 shadow-lg"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
               >
-                <Zap className="h-4 w-4 text-accent" />
-                <span className="text-sm font-medium">Nigeria's #1 Tech Education Hub</span>
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+                </span>
+                <span className="text-sm font-semibold tracking-wide">🇳🇬 Nigeria's #1 Tech Education Hub</span>
               </motion.div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white mb-8 leading-[1.1]">
-                Learn Tech Skills.
-                <br />
-                <span className="text-accent">Get Certified.</span>
-                <br />
-                <span className="text-white/90">Build Your Future.</span>
+              {/* Main Headline */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white mb-8 leading-[1.05]">
+                <motion.span 
+                  className="block"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  Master Tech Skills.
+                </motion.span>
+                <motion.span 
+                  className="block text-accent drop-shadow-lg"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  Get Certified.
+                </motion.span>
+                <motion.span 
+                  className="block bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  Launch Your Career.
+                </motion.span>
               </h1>
               
-              <p className="text-lg md:text-xl text-white/80 mb-10 max-w-lg leading-relaxed">
-                Join 5,000+ Nigerians who've launched successful tech careers with our hands-on training, expert mentorship, and industry-recognized certificates.
-              </p>
+              {/* Subheadline */}
+              <motion.p 
+                className="text-lg md:text-xl text-white/85 mb-10 max-w-xl leading-relaxed font-medium"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                Join <span className="text-accent font-bold">5,000+</span> Nigerians who've transformed their lives with our hands-on training, expert mentorship, and industry-recognized certificates.
+              </motion.p>
               
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 h-14 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 gap-2">
+              {/* CTA Buttons */}
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-10 h-16 shadow-2xl shadow-accent/30 hover:shadow-accent/50 hover:-translate-y-2 transition-all duration-300 gap-3 font-bold rounded-xl">
                   <Link to="/courses">
-                    <GraduationCap className="h-5 w-5" />
-                    Explore Courses
+                    <GraduationCap className="h-6 w-6" />
+                    Start Learning Free
+                    <ArrowRight className="h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="text-lg px-8 h-14 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 gap-2">
+                <Button asChild size="lg" variant="outline" className="text-lg px-10 h-16 bg-white/10 border-2 border-white/40 text-white hover:bg-white/20 hover:border-white/60 hover:-translate-y-2 transition-all duration-300 gap-3 font-bold rounded-xl backdrop-blur-sm">
                   <Link to="/gadgets">
-                    <Smartphone className="h-5 w-5" />
+                    <Smartphone className="h-6 w-6" />
                     Shop Gadgets
                   </Link>
                 </Button>
-              </div>
+              </motion.div>
 
-              {/* Trust Badges */}
-              <div className="flex flex-wrap items-center gap-6 text-white/70 text-sm">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-accent" />
-                  <span>Verified Certificates</span>
+              {/* Trust Indicators */}
+              <motion.div 
+                className="flex flex-wrap items-center gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+              >
+                <div className="flex items-center gap-2 text-white/90">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-accent" />
+                  </div>
+                  <span className="text-sm font-medium">Verified Certificates</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-accent" />
-                  <span>Job Placement Support</span>
+                <div className="flex items-center gap-2 text-white/90">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-accent" />
+                  </div>
+                  <span className="text-sm font-medium">95% Job Placement</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-accent" />
-                  <span>Expert Instructors</span>
+                <div className="flex items-center gap-2 text-white/90">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                    <Star className="w-5 h-5 text-accent" />
+                  </div>
+                  <span className="text-sm font-medium">5-Star Rated</span>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
             
-            {/* Stats Cards */}
+            {/* Stats Cards with Enhanced Design */}
             <motion.div 
-              className="hidden lg:grid grid-cols-2 gap-4"
-              initial={{ opacity: 0, x: 40 }}
+              className="hidden lg:grid grid-cols-2 gap-5"
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
             >
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-all duration-300 group"
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.5 + index * 0.15 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="bg-white/15 backdrop-blur-xl border border-white/25 rounded-3xl p-7 hover:bg-white/20 transition-all duration-500 group shadow-xl"
                 >
-                  <stat.icon className="w-8 h-8 text-accent mb-3 group-hover:scale-110 transition-transform duration-300" />
-                  <p className="text-3xl font-heading font-bold text-white mb-1">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} duration={2} />
+                  <div className="w-14 h-14 rounded-2xl bg-accent/20 flex items-center justify-center mb-4 group-hover:bg-accent/30 transition-colors duration-300">
+                    <stat.icon className="w-7 h-7 text-accent" />
+                  </div>
+                  <p className="text-4xl font-heading font-bold text-white mb-2">
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} duration={2.5} />
                   </p>
-                  <p className="text-white/70 text-sm">{stat.label}</p>
+                  <p className="text-white/75 text-sm font-medium">{stat.label}</p>
                 </motion.div>
               ))}
             </motion.div>
           </div>
         </div>
         
+        {/* Scroll Indicator */}
+        <motion.div 
+          className="absolute bottom-32 left-1/2 -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
+          >
+            <motion.div
+              animate={{ opacity: [1, 0, 1], y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-1.5 h-3 rounded-full bg-white/60"
+            />
+          </motion.div>
+        </motion.div>
+        
         {/* Wave Divider */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="hsl(var(--background))" />
+            <path d="M0 120L60 105C120 90 240 60 360 50C480 40 600 50 720 55C840 60 960 60 1080 65C1200 70 1320 80 1380 85L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="hsl(var(--background))" />
           </svg>
         </div>
       </section>
