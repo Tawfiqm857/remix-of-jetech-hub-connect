@@ -107,8 +107,12 @@ interface Course {
   id: string;
   title: string;
   category: string;
-  price: number;
-  level: string;
+  description: string;
+  price: number | null;
+  level: string | null;
+  duration: string | null;
+  image_url: string | null;
+  certificate_available: boolean | null;
 }
 
 interface StudentAchievement {
@@ -161,6 +165,20 @@ const Admin = () => {
     score: "",
   });
 
+  // Course Form State
+  const [courseDialogOpen, setCourseDialogOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [courseForm, setCourseForm] = useState({
+    title: "",
+    category: "",
+    description: "",
+    price: "",
+    level: "Beginner",
+    duration: "",
+    image_url: "",
+    certificate_available: true,
+  });
+
   useEffect(() => {
     if (!adminLoading && !isAdmin) {
       toast({
@@ -200,7 +218,7 @@ const Admin = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("courses")
-          .select("id, title, category, price, level")
+          .select("*")
           .order("created_at", { ascending: false }),
         supabase
           .from("student_achievements")
@@ -365,6 +383,85 @@ const Admin = () => {
     } else {
       setAchievements((prev) => prev.filter((a) => a.id !== achievementId));
       toast({ title: "Deleted", description: "Achievement deleted successfully" });
+    }
+  };
+
+  // Course Management Functions
+  const openAddCourse = () => {
+    setEditingCourse(null);
+    setCourseForm({
+      title: "",
+      category: "",
+      description: "",
+      price: "",
+      level: "Beginner",
+      duration: "",
+      image_url: "",
+      certificate_available: true,
+    });
+    setCourseDialogOpen(true);
+  };
+
+  const openEditCourse = (course: Course) => {
+    setEditingCourse(course);
+    setCourseForm({
+      title: course.title,
+      category: course.category,
+      description: course.description,
+      price: course.price?.toString() || "",
+      level: course.level || "Beginner",
+      duration: course.duration || "",
+      image_url: course.image_url || "",
+      certificate_available: course.certificate_available ?? true,
+    });
+    setCourseDialogOpen(true);
+  };
+
+  const handleSaveCourse = async () => {
+    const courseData = {
+      title: courseForm.title,
+      category: courseForm.category,
+      description: courseForm.description,
+      price: courseForm.price ? parseFloat(courseForm.price) : 0,
+      level: courseForm.level,
+      duration: courseForm.duration || null,
+      image_url: courseForm.image_url || null,
+      certificate_available: courseForm.certificate_available,
+    };
+
+    if (editingCourse) {
+      const { error } = await supabase
+        .from("courses")
+        .update(courseData)
+        .eq("id", editingCourse.id);
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to update course", variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: "Course updated successfully" });
+        fetchAllData();
+      }
+    } else {
+      const { error } = await supabase.from("courses").insert([courseData]);
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to add course", variant: "destructive" });
+      } else {
+        toast({ title: "Success", description: "Course added successfully" });
+        fetchAllData();
+      }
+    }
+    setCourseDialogOpen(false);
+  };
+
+  const deleteCourse = async (courseId: string) => {
+    const { error } = await supabase.from("courses").delete().eq("id", courseId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to delete course. It may have enrollments.", variant: "destructive" });
+    } else {
+      setCourses((prev) => prev.filter((c) => c.id !== courseId));
+      toast({ title: "Deleted", description: "Course deleted successfully" });
     }
   };
 
@@ -1274,8 +1371,155 @@ const Admin = () => {
             {/* Courses Tab */}
             <TabsContent value="courses">
               <Card>
-                <CardHeader>
-                  <CardTitle>Courses</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5" />
+                    Course Management
+                  </CardTitle>
+                  <Dialog open={courseDialogOpen} onOpenChange={setCourseDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" onClick={openAddCourse}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Course
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>
+                          {editingCourse ? "Edit Course" : "Add New Course"}
+                        </DialogTitle>
+                        <DialogDescription>
+                          {editingCourse ? "Update course details" : "Create a new course for students"}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="course_title">Course Title</Label>
+                          <Input
+                            id="course_title"
+                            value={courseForm.title}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, title: e.target.value })
+                            }
+                            placeholder="e.g., Web Development Fundamentals"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="course_category">Category</Label>
+                            <Select
+                              value={courseForm.category}
+                              onValueChange={(value) =>
+                                setCourseForm({ ...courseForm, category: value })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Web Development">Web Development</SelectItem>
+                                <SelectItem value="Mobile Development">Mobile Development</SelectItem>
+                                <SelectItem value="Data Science">Data Science</SelectItem>
+                                <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
+                                <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                                <SelectItem value="Cloud Computing">Cloud Computing</SelectItem>
+                                <SelectItem value="AI/ML">AI/ML</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="course_level">Level</Label>
+                            <Select
+                              value={courseForm.level}
+                              onValueChange={(value) =>
+                                setCourseForm({ ...courseForm, level: value })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Beginner">Beginner</SelectItem>
+                                <SelectItem value="Intermediate">Intermediate</SelectItem>
+                                <SelectItem value="Advanced">Advanced</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="course_description">Description</Label>
+                          <Textarea
+                            id="course_description"
+                            value={courseForm.description}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, description: e.target.value })
+                            }
+                            placeholder="Describe what students will learn..."
+                            rows={3}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="course_price">Price (₦)</Label>
+                            <Input
+                              id="course_price"
+                              type="number"
+                              min="0"
+                              value={courseForm.price}
+                              onChange={(e) =>
+                                setCourseForm({ ...courseForm, price: e.target.value })
+                              }
+                              placeholder="0 for free"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="course_duration">Duration</Label>
+                            <Input
+                              id="course_duration"
+                              value={courseForm.duration}
+                              onChange={(e) =>
+                                setCourseForm({ ...courseForm, duration: e.target.value })
+                              }
+                              placeholder="e.g., 8 weeks"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="course_image">Image URL</Label>
+                          <Input
+                            id="course_image"
+                            value={courseForm.image_url}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, image_url: e.target.value })
+                            }
+                            placeholder="https://..."
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="certificate_available">Certificate Available</Label>
+                          <Switch
+                            id="certificate_available"
+                            checked={courseForm.certificate_available}
+                            onCheckedChange={(checked) =>
+                              setCourseForm({ ...courseForm, certificate_available: checked })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => setCourseDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button onClick={handleSaveCourse}>
+                          {editingCourse ? "Update Course" : "Add Course"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -1285,7 +1529,10 @@ const Admin = () => {
                           <TableHead>Title</TableHead>
                           <TableHead>Category</TableHead>
                           <TableHead>Level</TableHead>
+                          <TableHead>Duration</TableHead>
                           <TableHead>Price</TableHead>
+                          <TableHead>Certificate</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1296,15 +1543,61 @@ const Admin = () => {
                               <Badge variant="outline">{course.category}</Badge>
                             </TableCell>
                             <TableCell>{course.level}</TableCell>
+                            <TableCell>{course.duration || "-"}</TableCell>
                             <TableCell className="font-semibold">
                               {course.price ? formatPrice(course.price) : "Free"}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={course.certificate_available ? "default" : "secondary"}>
+                                {course.certificate_available ? "Yes" : "No"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditCourse(course)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="text-destructive"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Course?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This will permanently delete the course. This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteCourse(course.id)}
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
                     {courses.length === 0 && (
-                      <p className="text-center text-muted-foreground py-8">No courses yet</p>
+                      <p className="text-center text-muted-foreground py-8">
+                        No courses yet. Add your first course!
+                      </p>
                     )}
                   </div>
                 </CardContent>
