@@ -21,9 +21,12 @@ import {
   ShieldCheck,
   TrendingUp,
   Clock,
+  Wrench,
+  MessageCircle,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import heroBackground from "@/assets/hero-background.jpg";
 
 const Index = () => {
   const { data: courses } = useQuery({
@@ -46,6 +49,18 @@ const Index = () => {
         .select('*')
         .eq('in_stock', true)
         .limit(4);
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: services } = useQuery({
+    queryKey: ['featured-services'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .limit(6);
       if (error) throw error;
       return data;
     }
@@ -106,24 +121,35 @@ const Index = () => {
     transition: { duration: 0.6 },
   };
 
+  const serviceIcons: Record<string, React.ElementType> = {
+    Truck: Wrench,
+    Wrench: Wrench,
+    Globe: Globe,
+    Palette: Star,
+    Layout: BookOpen,
+    TrendingUp: TrendingUp,
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Animated Background with Gradient Mesh */}
+        {/* Hero Background Image */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,hsl(var(--accent)/0.4)_0%,transparent_50%)]" />
-            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--accent)/0.3)_0%,transparent_50%)]" />
-          </div>
-          
-          {/* Animated Grid Pattern */}
-          <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }} />
+          <img 
+            src={heroBackground} 
+            alt="Tech Education" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-primary/30" />
         </div>
+        
+        {/* Animated Grid Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
         
         {/* Animated Floating Elements */}
         <motion.div 
@@ -677,6 +703,83 @@ const Index = () => {
                 </Link>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Services */}
+      <section className="py-20 md:py-28 bg-background relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="container mx-auto px-4 relative">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
+            <div>
+              <motion.span 
+                className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Services
+              </motion.span>
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-3"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                Professional Tech Services
+              </motion.h2>
+              <motion.p 
+                className="text-muted-foreground text-lg"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                Expert solutions for all your tech needs
+              </motion.p>
+            </div>
+            <Button asChild variant="outline" className="mt-6 md:mt-0 group gap-2">
+              <Link to="/services">
+                View All Services
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services?.map((service, index) => {
+              const IconComponent = serviceIcons[service.icon || ''] || Wrench;
+              return (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link to="/services" className="block group h-full">
+                    <Card className="overflow-hidden h-full border-border/50 hover:shadow-elevated transition-all duration-300 p-6">
+                      <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                        <IconComponent className="w-7 h-7 text-primary" />
+                      </div>
+                      <h3 className="font-heading font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+                        {service.name}
+                      </h3>
+                      <p className="text-muted-foreground text-sm line-clamp-2">
+                        {service.description}
+                      </p>
+                      <div className="flex items-center gap-2 mt-4 text-primary font-medium text-sm">
+                        <MessageCircle className="h-4 w-4" />
+                        Request Service
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </Card>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -590,61 +591,116 @@ const Admin = () => {
   return (
     <Layout>
       {/* Header */}
-      <section className="bg-primary text-primary-foreground py-8">
-        <div className="container mx-auto px-4">
-          <h1 className="text-2xl md:text-4xl font-heading font-bold mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-primary-foreground/80">
-            Manage orders, products, students, and more
-          </p>
+      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-12 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-heading font-bold mb-2">
+                Admin Dashboard
+              </h1>
+              <p className="text-primary-foreground/80">
+                Manage orders, products, students, and more
+              </p>
+            </div>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={fetchAllData}
+              className="w-fit"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh All Data
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Stats */}
       <section className="py-6 bg-background border-b">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <ShoppingBag className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{orders.length}</p>
-                <p className="text-muted-foreground text-sm">Orders</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <ShoppingBag className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{orders.length}</p>
+                    <p className="text-muted-foreground text-xs">Orders</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <Wrench className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{serviceRequests.length}</p>
-                <p className="text-muted-foreground text-sm">Service Requests</p>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                    <Wrench className="w-5 h-5 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{serviceRequests.length}</p>
+                    <p className="text-muted-foreground text-xs">Requests</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <Users className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{enrollments.length}</p>
-                <p className="text-muted-foreground text-sm">Enrollments</p>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-emerald-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{enrollments.length}</p>
+                    <p className="text-muted-foreground text-xs">Students</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <Package className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{gadgets.length}</p>
-                <p className="text-muted-foreground text-sm">Products</p>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                    <Package className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{gadgets.length}</p>
+                    <p className="text-muted-foreground text-xs">Products</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <BookOpen className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{courses.length}</p>
-                <p className="text-muted-foreground text-sm">Courses</p>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{courses.length}</p>
+                    <p className="text-muted-foreground text-xs">Courses</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-4 text-center">
-                <Award className="w-6 h-6 text-accent mx-auto mb-2" />
-                <p className="text-xl font-heading font-bold">{achievements.length}</p>
-                <p className="text-muted-foreground text-sm">Achievements</p>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <Award className="w-5 h-5 text-accent" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{achievements.length}</p>
+                    <p className="text-muted-foreground text-xs">Awards</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -935,20 +991,21 @@ const Admin = () => {
             {/* Gadgets/Products Tab */}
             <TabsContent value="gadgets">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Products Management</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-4">
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="h-5 w-5" />
+                    Products Management
+                  </CardTitle>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={fetchAllData}>
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Refresh
                     </Button>
+                    <Button size="sm" onClick={openAddProduct}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Product
+                    </Button>
                     <Dialog open={productDialogOpen} onOpenChange={setProductDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm" onClick={openAddProduct}>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Product
-                        </Button>
-                      </DialogTrigger>
                       <DialogContent className="max-w-md">
                         <DialogHeader>
                           <DialogTitle>
