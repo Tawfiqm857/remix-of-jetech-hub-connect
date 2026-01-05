@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import {
   BookOpen,
   Award,
@@ -15,6 +16,9 @@ import {
   CheckCircle,
   XCircle,
   Wrench,
+  Trophy,
+  Star,
+  GraduationCap,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -68,6 +72,16 @@ interface ServiceRequest {
   };
 }
 
+interface Achievement {
+  id: string;
+  achievement_type: string;
+  title: string;
+  description: string | null;
+  grade: string | null;
+  score: number | null;
+  awarded_at: string;
+}
+
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -77,6 +91,7 @@ const Dashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [swaps, setSwaps] = useState<Swap[]>([]);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -94,7 +109,7 @@ const Dashboard = () => {
   const fetchUserData = async () => {
     if (!user) return;
 
-    const [enrollmentsRes, certificatesRes, ordersRes, swapsRes, serviceRequestsRes] = await Promise.all([
+    const [enrollmentsRes, certificatesRes, ordersRes, swapsRes, serviceRequestsRes, achievementsRes] = await Promise.all([
       supabase
         .from("enrollments")
         .select("*, courses(title, category)")
@@ -120,6 +135,11 @@ const Dashboard = () => {
         .select("*, services(name)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false }),
+      supabase
+        .from("student_achievements")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("awarded_at", { ascending: false }),
     ]);
 
     setEnrollments((enrollmentsRes.data as unknown as Enrollment[]) || []);
@@ -127,6 +147,7 @@ const Dashboard = () => {
     setOrders((ordersRes.data as unknown as Order[]) || []);
     setSwaps((swapsRes.data as unknown as Swap[]) || []);
     setServiceRequests((serviceRequestsRes.data as unknown as ServiceRequest[]) || []);
+    setAchievements((achievementsRes.data as unknown as Achievement[]) || []);
     setLoading(false);
   };
 
@@ -198,7 +219,7 @@ const Dashboard = () => {
       <section className="py-8 md:py-12 bg-background">
         <div className="container mx-auto px-4">
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             <Card className="border-border/50">
               <CardContent className="p-4 text-center">
                 <BookOpen className="w-8 h-8 text-accent mx-auto mb-2" />
@@ -206,6 +227,15 @@ const Dashboard = () => {
                   {enrollments.length}
                 </p>
                 <p className="text-muted-foreground text-sm">Courses Enrolled</p>
+              </CardContent>
+            </Card>
+            <Card className="border-border/50">
+              <CardContent className="p-4 text-center">
+                <Trophy className="w-8 h-8 text-accent mx-auto mb-2" />
+                <p className="text-2xl font-heading font-bold text-foreground">
+                  {achievements.length}
+                </p>
+                <p className="text-muted-foreground text-sm">Achievements</p>
               </CardContent>
             </Card>
             <Card className="border-border/50">
@@ -239,9 +269,12 @@ const Dashboard = () => {
 
           {/* Tabs */}
           <Tabs defaultValue="courses" className="w-full">
-            <TabsList className="w-full md:w-auto mb-6">
+            <TabsList className="w-full md:w-auto mb-6 flex-wrap h-auto gap-1">
               <TabsTrigger value="courses" className="flex-1 md:flex-none">
-                Courses
+                My Courses
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="flex-1 md:flex-none">
+                Achievements
               </TabsTrigger>
               <TabsTrigger value="certificates" className="flex-1 md:flex-none">
                 Certificates
@@ -277,32 +310,123 @@ const Dashboard = () => {
               ) : (
                 <div className="grid md:grid-cols-2 gap-4">
                   {enrollments.map((enrollment) => (
-                    <Card key={enrollment.id} className="border-border/50">
+                    <Card key={enrollment.id} className="border-border/50 hover:shadow-md transition-shadow">
                       <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <h3 className="font-heading font-semibold text-foreground">
-                              {enrollment.courses?.title}
-                            </h3>
-                            <p className="text-muted-foreground text-sm">
-                              {enrollment.courses?.category}
-                            </p>
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                              <GraduationCap className="w-5 h-5 text-accent" />
+                            </div>
+                            <div>
+                              <h3 className="font-heading font-semibold text-foreground">
+                                {enrollment.courses?.title}
+                              </h3>
+                              <p className="text-muted-foreground text-sm">
+                                {enrollment.courses?.category}
+                              </p>
+                            </div>
                           </div>
                           {getStatusBadge(enrollment.status)}
                         </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Progress</span>
+                            <span className="text-foreground font-medium">
+                              {enrollment.progress}%
+                            </span>
+                          </div>
+                          <Progress value={enrollment.progress} className="h-2" />
+                          <p className="text-xs text-muted-foreground">
                             Enrolled: {formatDate(enrollment.enrolled_at)}
-                          </span>
-                          <span className="text-foreground font-medium">
-                            {enrollment.progress}% complete
-                          </span>
+                          </p>
                         </div>
-                        <div className="w-full bg-secondary rounded-full h-2 mt-2">
-                          <div
-                            className="bg-accent rounded-full h-2 transition-all"
-                            style={{ width: `${enrollment.progress}%` }}
-                          />
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Achievements Tab */}
+            <TabsContent value="achievements">
+              {achievements.length === 0 ? (
+                <Card className="border-border/50">
+                  <CardContent className="p-8 text-center">
+                    <Trophy className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+                    <h3 className="font-heading font-semibold text-lg text-foreground mb-2">
+                      No achievements yet
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Complete courses and exams to earn achievements
+                    </p>
+                    <Button
+                      onClick={() => navigate("/courses")}
+                      className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                    >
+                      Start Learning
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {achievements.map((achievement) => (
+                    <Card key={achievement.id} className="border-border/50 hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                            achievement.achievement_type === 'grade' 
+                              ? 'bg-blue-500/10' 
+                              : achievement.achievement_type === 'certificate'
+                              ? 'bg-green-500/10'
+                              : achievement.achievement_type === 'badge'
+                              ? 'bg-yellow-500/10'
+                              : 'bg-purple-500/10'
+                          }`}>
+                            {achievement.achievement_type === 'grade' ? (
+                              <Star className={`w-6 h-6 ${
+                                achievement.grade === 'A' ? 'text-yellow-500' : 'text-blue-500'
+                              }`} />
+                            ) : achievement.achievement_type === 'certificate' ? (
+                              <Award className="w-6 h-6 text-green-500" />
+                            ) : achievement.achievement_type === 'badge' ? (
+                              <Trophy className="w-6 h-6 text-yellow-500" />
+                            ) : (
+                              <CheckCircle className="w-6 h-6 text-purple-500" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge variant="outline" className="capitalize text-xs">
+                                {achievement.achievement_type}
+                              </Badge>
+                              {achievement.grade && (
+                                <Badge 
+                                  variant={achievement.grade === 'A' ? 'default' : achievement.grade === 'F' ? 'destructive' : 'secondary'}
+                                  className="text-xs"
+                                >
+                                  Grade: {achievement.grade}
+                                </Badge>
+                              )}
+                            </div>
+                            <h3 className="font-heading font-semibold text-foreground truncate">
+                              {achievement.title}
+                            </h3>
+                            {achievement.description && (
+                              <p className="text-muted-foreground text-sm line-clamp-2 mt-1">
+                                {achievement.description}
+                              </p>
+                            )}
+                            <div className="flex items-center justify-between mt-3">
+                              {achievement.score !== null && (
+                                <span className="text-sm font-medium text-accent">
+                                  Score: {achievement.score}%
+                                </span>
+                              )}
+                              <span className="text-xs text-muted-foreground">
+                                {formatDate(achievement.awarded_at)}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
