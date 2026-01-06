@@ -22,6 +22,12 @@ interface Course {
   certificate_available: boolean;
 }
 
+// Helper to check if string is valid UUID
+const isValidUUID = (str: string) => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(str);
+};
+
 const CourseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [course, setCourse] = useState<Course | null>(null);
@@ -35,6 +41,16 @@ const CourseDetail = () => {
 
   useEffect(() => {
     if (id) {
+      // Check if ID is a valid UUID before fetching
+      if (!isValidUUID(id)) {
+        toast({
+          title: "Course not found",
+          description: "The requested course does not exist.",
+          variant: "destructive",
+        });
+        navigate("/courses");
+        return;
+      }
       fetchCourse();
       if (user) {
         checkEnrollment();
@@ -43,6 +59,11 @@ const CourseDetail = () => {
   }, [id, user]);
 
   const fetchCourse = async () => {
+    if (!id || !isValidUUID(id)) {
+      setLoading(false);
+      return;
+    }
+    
     const { data, error } = await supabase
       .from("courses")
       .select("*")
@@ -60,7 +81,7 @@ const CourseDetail = () => {
   };
 
   const checkEnrollment = async () => {
-    if (!user || !id) return;
+    if (!user || !id || !isValidUUID(id)) return;
     
     const { data } = await supabase
       .from("enrollments")

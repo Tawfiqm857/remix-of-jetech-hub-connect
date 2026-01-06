@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -57,8 +57,11 @@ import {
   Plus,
   Edit,
   Award,
-  GraduationCap,
+  Upload,
+  Image as ImageIcon,
 } from "lucide-react";
+import { AdminNotifications } from "@/components/admin/AdminNotifications";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useToast } from "@/hooks/use-toast";
@@ -132,6 +135,8 @@ const Admin = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const productImageInputRef = useRef<HTMLInputElement>(null);
+  const { uploadImage, uploading: uploadingProductImage } = useImageUpload({ bucket: "gadget-images", folder: "products" });
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>([]);
@@ -140,6 +145,7 @@ const Admin = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [achievements, setAchievements] = useState<StudentAchievement[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savingProduct, setSavingProduct] = useState(false);
 
   // Product Form State
   const [productDialogOpen, setProductDialogOpen] = useState(false);
@@ -265,7 +271,25 @@ const Admin = () => {
     setProductDialogOpen(true);
   };
 
+  const handleProductImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const publicUrl = await uploadImage(file);
+    if (publicUrl) {
+      setProductForm((prev) => ({ ...prev, image_url: publicUrl }));
+    }
+    // Reset input so the same file can be selected again
+    e.target.value = "";
+  };
+
   const handleSaveProduct = async () => {
+    if (!productForm.name || !productForm.price || !productForm.category) {
+      toast({ title: "Validation Error", description: "Name, price, and category are required", variant: "destructive" });
+      return;
+    }
+
+    setSavingProduct(true);
     const productData = {
       name: productForm.name,
       price: parseFloat(productForm.price),
@@ -286,6 +310,7 @@ const Admin = () => {
         toast({ title: "Error", description: "Failed to update product", variant: "destructive" });
       } else {
         toast({ title: "Success", description: "Product updated successfully" });
+        setProductDialogOpen(false);
         fetchAllData();
       }
     } else {
@@ -295,10 +320,11 @@ const Admin = () => {
         toast({ title: "Error", description: "Failed to add product", variant: "destructive" });
       } else {
         toast({ title: "Success", description: "Product added successfully" });
+        setProductDialogOpen(false);
         fetchAllData();
       }
     }
-    setProductDialogOpen(false);
+    setSavingProduct(false);
   };
 
   const toggleGadgetStock = async (gadgetId: string, inStock: boolean) => {
@@ -608,15 +634,18 @@ const Admin = () => {
                 Manage orders, products, students, and more
               </p>
             </div>
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              onClick={fetchAllData}
-              className="w-fit"
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh All Data
-            </Button>
+            <div className="flex items-center gap-2">
+              <AdminNotifications />
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={fetchAllData}
+                className="w-fit"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh All Data
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -910,7 +939,7 @@ const Admin = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5" />
+                    <Users className="h-5 w-5" />
                     Student Enrollments
                   </CardTitle>
                 </CardHeader>
@@ -1076,7 +1105,49 @@ const Admin = () => {
                             />
                           </div>
                           <div className="grid gap-2">
-                            <Label htmlFor="image_url">Image URL</Label>
+                            <Label>Product Image</Label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              ref={productImageInputRef}
+                              onChange={handleProductImageSelect}
+                              className="hidden"
+                            />
+                            <div className="flex gap-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => productImageInputRef.current?.click()}
+                                disabled={uploadingProductImage}
+                                className="flex-1"
+                              >
+                                {uploadingProductImage ? (
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                ) : (
+                                  <Upload className="h-4 w-4 mr-2" />
+                                )}
+                                {uploadingProductImage ? "Uploading..." : "Upload Image"}
+                              </Button>
+                            </div>
+                            {productForm.image_url && (
+                              <div className="relative mt-2">
+                                <img
+                                  src={productForm.image_url}
+                                  alt="Product preview"
+                                  className="w-full h-32 object-cover rounded-md border"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="destructive"
+                                  size="icon"
+                                  className="absolute top-1 right-1 h-6 w-6"
+                                  onClick={() => setProductForm({ ...productForm, image_url: "" })}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            )}
+                            <p className="text-xs text-muted-foreground">Or enter URL manually:</p>
                             <Input
                               id="image_url"
                               value={productForm.image_url}
@@ -1113,7 +1184,10 @@ const Admin = () => {
                           <Button variant="outline" onClick={() => setProductDialogOpen(false)}>
                             Cancel
                           </Button>
-                          <Button onClick={handleSaveProduct}>
+                          <Button onClick={handleSaveProduct} disabled={savingProduct || uploadingProductImage}>
+                            {savingProduct ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : null}
                             {editingGadget ? "Update" : "Add"} Product
                           </Button>
                         </DialogFooter>

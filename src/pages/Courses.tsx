@@ -30,75 +30,11 @@ interface Course {
   certificate_available: boolean;
 }
 
-// Placeholder courses for demo
-const placeholderCourses: Course[] = [
-  {
-    id: "1",
-    title: "Full-Stack Web Development",
-    description: "Master the art of building complete web applications from frontend to backend. Learn HTML, CSS, JavaScript, React, Node.js, and databases. This comprehensive course takes you from beginner to job-ready developer with hands-on projects that simulate real workplace scenarios.\n\nBy the end of this course, you'll have built multiple portfolio-worthy projects including an e-commerce platform, a social media app, and a business management system. Our industry-experienced instructors guide you every step of the way.",
-    category: "Web Development",
-    level: "Beginner",
-    duration: "16 weeks",
-    price: 150000,
-    image_url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
-    certificate_available: true,
-  },
-  {
-    id: "2",
-    title: "UI/UX Design Masterclass",
-    description: "Transform your creative ideas into stunning digital experiences. Learn design thinking, wireframing, prototyping with Figma, and user research methods. This course covers the entire design process from concept to final product.\n\nYou'll work on real client projects, building a strong portfolio that showcases your ability to create beautiful, user-centered designs. Perfect for aspiring designers and anyone looking to enhance their design skills.",
-    category: "UI/UX Design",
-    level: "Beginner",
-    duration: "12 weeks",
-    price: 120000,
-    image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800",
-    certificate_available: true,
-  },
-  {
-    id: "3",
-    title: "Data Analysis with Python & Excel",
-    description: "Become a data-driven decision maker. Learn to collect, analyze, and visualize data using Python, Excel, SQL, and powerful visualization tools. This course is designed for anyone who wants to leverage data in their career.\n\nFrom cleaning messy datasets to creating compelling dashboards, you'll gain practical skills that are in high demand across industries. Real Nigerian business datasets are used throughout the course for relevant, practical experience.",
-    category: "Data Analysis",
-    level: "Intermediate",
-    duration: "10 weeks",
-    price: 100000,
-    image_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
-    certificate_available: true,
-  },
-  {
-    id: "4",
-    title: "Professional Graphics Design",
-    description: "Create stunning visuals that capture attention and communicate effectively. Master Adobe Photoshop, Illustrator, and InDesign. Learn branding, logo design, social media graphics, and print design fundamentals.\n\nThis course equips you with the skills to work as a freelance designer or join a design agency. You'll complete projects for real businesses, building both your skills and professional network in Nigeria's creative industry.",
-    category: "Graphics Design",
-    level: "Beginner",
-    duration: "8 weeks",
-    price: 80000,
-    image_url: "https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=800",
-    certificate_available: true,
-  },
-  {
-    id: "5",
-    title: "Professional Video Editing",
-    description: "Master the art of video storytelling. Learn Adobe Premiere Pro, After Effects, and DaVinci Resolve. From basic cuts to advanced motion graphics, this course covers everything you need to create professional-quality videos.\n\nPerfect for content creators, aspiring filmmakers, and marketing professionals. You'll edit music videos, commercials, documentaries, and social media content, building a versatile portfolio that opens doors in Nigeria's booming creative industry.",
-    category: "Video Editing",
-    level: "Beginner",
-    duration: "10 weeks",
-    price: 90000,
-    image_url: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800",
-    certificate_available: true,
-  },
-  {
-    id: "6",
-    title: "Forex Trading Fundamentals",
-    description: "Learn to trade the world's largest financial market. Understand currency pairs, technical analysis, risk management, and trading psychology. This course provides a solid foundation for anyone interested in forex trading.\n\nOur experienced traders share proven strategies and help you develop a trading plan that suits your lifestyle. You'll practice on demo accounts before risking real money, ensuring you're fully prepared for the markets.",
-    category: "Forex Trading",
-    level: "Beginner",
-    duration: "6 weeks",
-    price: 75000,
-    image_url: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800",
-    certificate_available: true,
-  },
-];
+// Helper to check if string is valid UUID
+const isValidUUID = (str: string) => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(str);
+};
 
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -123,10 +59,9 @@ const Courses = () => {
 
     if (error) {
       console.error("Error fetching courses:", error);
-      // Use placeholder courses if database is empty
-      setCourses(placeholderCourses);
+      setCourses([]);
     } else {
-      setCourses(data.length > 0 ? data : placeholderCourses);
+      setCourses(data || []);
     }
     setLoading(false);
   };
@@ -138,6 +73,16 @@ const Courses = () => {
         description: "Please sign in to enroll in courses.",
       });
       navigate("/auth");
+      return;
+    }
+
+    // Check if courseId is a valid UUID before making DB call
+    if (!isValidUUID(courseId)) {
+      toast({
+        title: "Invalid course",
+        description: "This course is not available for enrollment.",
+        variant: "destructive",
+      });
       return;
     }
 
