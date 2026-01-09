@@ -17,6 +17,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, Link } from "react-router-dom";
+import ImageCarousel from "@/components/ImageCarousel";
+
+interface CourseImage {
+  image_url: string;
+  display_order: number;
+}
 
 interface Course {
   id: string;
@@ -28,6 +34,7 @@ interface Course {
   price: number;
   image_url: string;
   certificate_available: boolean;
+  course_images: CourseImage[];
 }
 
 // Helper to check if string is valid UUID
@@ -54,14 +61,27 @@ const Courses = () => {
   const fetchCourses = async () => {
     const { data, error } = await supabase
       .from("courses")
-      .select("*")
+      .select(`
+        *,
+        course_images (
+          image_url,
+          display_order
+        )
+      `)
       .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Error fetching courses:", error);
       setCourses([]);
     } else {
-      setCourses(data || []);
+      // Sort course_images by display_order
+      const coursesWithSortedImages = (data || []).map(course => ({
+        ...course,
+        course_images: (course.course_images || []).sort(
+          (a: CourseImage, b: CourseImage) => a.display_order - b.display_order
+        )
+      }));
+      setCourses(coursesWithSortedImages);
     }
     setLoading(false);
   };
@@ -133,6 +153,14 @@ const Courses = () => {
       currency: "NGN",
       minimumFractionDigits: 0,
     }).format(price);
+  };
+
+  // Get images for carousel - use course_images if available, fallback to image_url
+  const getCourseImages = (course: Course): string[] => {
+    if (course.course_images && course.course_images.length > 0) {
+      return course.course_images.map(img => img.image_url);
+    }
+    return course.image_url ? [course.image_url] : [];
   };
 
   return (
@@ -210,14 +238,14 @@ const Courses = () => {
                   className="border-border/50 bg-card hover-lift hover-glow overflow-hidden flex flex-col group animate-fade-up"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className="aspect-video relative overflow-hidden bg-muted">
-                    <img
-                      src={course.image_url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800"}
+                  <div className="relative">
+                    <ImageCarousel
+                      images={getCourseImages(course)}
                       alt={course.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      autoPlayInterval={3000}
                     />
                     {course.certificate_available && (
-                      <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground">
+                      <Badge className="absolute top-3 right-3 z-20 bg-accent text-accent-foreground">
                         <Award className="w-3 h-3 mr-1" />
                         Certificate
                       </Badge>

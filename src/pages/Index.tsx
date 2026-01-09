@@ -8,6 +8,18 @@ import { GraduationCap, Smartphone, ArrowRight, Users, Award, Zap, RefreshCw, Ch
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import heroBackground from "@/assets/hero-background.jpg";
+import ImageCarousel from "@/components/ImageCarousel";
+
+interface CourseImage {
+  image_url: string;
+  display_order: number;
+}
+
+interface ServiceImage {
+  image_url: string;
+  display_order: number;
+}
+
 const Index = () => {
   const {
     data: courses
@@ -17,9 +29,21 @@ const Index = () => {
       const {
         data,
         error
-      } = await supabase.from('courses').select('*').limit(3);
+      } = await supabase.from('courses').select(`
+        *,
+        course_images (
+          image_url,
+          display_order
+        )
+      `).limit(3);
       if (error) throw error;
-      return data;
+      // Sort course_images by display_order
+      return (data || []).map(course => ({
+        ...course,
+        course_images: (course.course_images || []).sort(
+          (a: CourseImage, b: CourseImage) => a.display_order - b.display_order
+        )
+      }));
     }
   });
   const {
@@ -43,9 +67,21 @@ const Index = () => {
       const {
         data,
         error
-      } = await supabase.from('services').select('*').limit(6);
+      } = await supabase.from('services').select(`
+        *,
+        service_images (
+          image_url,
+          display_order
+        )
+      `).limit(6);
       if (error) throw error;
-      return data;
+      // Sort service_images by display_order
+      return (data || []).map(service => ({
+        ...service,
+        service_images: (service.service_images || []).sort(
+          (a: ServiceImage, b: ServiceImage) => a.display_order - b.display_order
+        )
+      }));
     }
   });
   const formatPrice = (price: number) => {
@@ -555,55 +591,67 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses?.map((course, index) => <motion.div key={course.id} initial={{
-            opacity: 0,
-            y: 30
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} transition={{
-            delay: index * 0.1
-          }}>
-                <Link to={`/courses/${course.id}`} className="block group h-full">
-                  <Card className="overflow-hidden h-full border-border/50 hover:shadow-elevated transition-all duration-300">
-                    <div className="aspect-video overflow-hidden relative">
-                      <img src={course.image_url || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800'} alt={course.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                      {course.certificate_available && <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-medium shadow-lg">
-                          <Award className="h-3.5 w-3.5" />
-                          Certificate
-                        </div>}
-                    </div>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-                          {course.category}
-                        </span>
-                        {course.level && <span className="px-3 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground">
-                            {course.level}
-                          </span>}
+            {courses?.map((course, index) => {
+              const courseImages = course.course_images?.length > 0 
+                ? course.course_images.map((img: CourseImage) => img.image_url)
+                : course.image_url ? [course.image_url] : [];
+              
+              return (
+                <motion.div key={course.id} initial={{
+                  opacity: 0,
+                  y: 30
+                }} whileInView={{
+                  opacity: 1,
+                  y: 0
+                }} viewport={{
+                  once: true
+                }} transition={{
+                  delay: index * 0.1
+                }}>
+                  <Link to={`/courses/${course.id}`} className="block group h-full">
+                    <Card className="overflow-hidden h-full border-border/50 hover:shadow-elevated transition-all duration-300">
+                      <div className="relative">
+                        <ImageCarousel
+                          images={courseImages}
+                          alt={course.title}
+                          autoPlayInterval={3000}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10" />
+                        {course.certificate_available && <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-medium shadow-lg">
+                            <Award className="h-3.5 w-3.5" />
+                            Certificate
+                          </div>}
                       </div>
-                      <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors duration-300 text-xl">
-                        {course.title}
-                      </CardTitle>
-                      <CardDescription className="line-clamp-2">{course.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-2xl font-bold text-primary">
-                            {course.price === 0 ? 'Free' : formatPrice(course.price || 0)}
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                            {course.category}
                           </span>
-                          {course.duration && <span className="text-sm text-muted-foreground ml-2">• {course.duration}</span>}
+                          {course.level && <span className="px-3 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground">
+                              {course.level}
+                            </span>}
                         </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>)}
+                        <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors duration-300 text-xl">
+                          {course.title}
+                        </CardTitle>
+                        <CardDescription className="line-clamp-2">{course.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-2xl font-bold text-primary">
+                              {course.price === 0 ? 'Free' : formatPrice(course.price || 0)}
+                            </span>
+                            {course.duration && <span className="text-sm text-muted-foreground ml-2">• {course.duration}</span>}
+                          </div>
+                          <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -846,38 +894,63 @@ const Index = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services?.map((service, index) => {
-            const IconComponent = serviceIcons[service.icon || ''] || Wrench;
-            return <motion.div key={service.id} initial={{
-              opacity: 0,
-              y: 30
-            }} whileInView={{
-              opacity: 1,
-              y: 0
-            }} viewport={{
-              once: true
-            }} transition={{
-              delay: index * 0.1
-            }}>
+              const IconComponent = serviceIcons[service.icon || ''] || Wrench;
+              const serviceImages = service.service_images?.length > 0 
+                ? service.service_images.map((img: ServiceImage) => img.image_url)
+                : [];
+              
+              return (
+                <motion.div key={service.id} initial={{
+                  opacity: 0,
+                  y: 30
+                }} whileInView={{
+                  opacity: 1,
+                  y: 0
+                }} viewport={{
+                  once: true
+                }} transition={{
+                  delay: index * 0.1
+                }}>
                   <Link to="/services" className="block group h-full">
-                    <Card className="overflow-hidden h-full border-border/50 hover:shadow-elevated transition-all duration-300 p-6">
-                      <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                        <IconComponent className="w-7 h-7 text-primary" />
-                      </div>
-                      <h3 className="font-heading font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-                        {service.name}
-                      </h3>
-                      <p className="text-muted-foreground text-sm line-clamp-2">
-                        {service.description}
-                      </p>
-                      <div className="flex items-center gap-2 mt-4 text-primary font-medium text-sm">
-                        <MessageCircle className="h-4 w-4" />
-                        Request Service
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <Card className="overflow-hidden h-full border-border/50 hover:shadow-elevated transition-all duration-300">
+                      {serviceImages.length > 0 && (
+                        <div className="relative">
+                          <ImageCarousel
+                            images={serviceImages}
+                            alt={service.name}
+                            autoPlayInterval={3000}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none z-10" />
+                          <div className="absolute bottom-4 left-4 z-20">
+                            <div className="w-12 h-12 rounded-xl bg-primary/90 flex items-center justify-center shadow-lg">
+                              <IconComponent className="w-6 h-6 text-primary-foreground" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div className="p-6">
+                        {serviceImages.length === 0 && (
+                          <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                            <IconComponent className="w-7 h-7 text-primary" />
+                          </div>
+                        )}
+                        <h3 className="font-heading font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+                          {service.name}
+                        </h3>
+                        <p className="text-muted-foreground text-sm line-clamp-2">
+                          {service.description}
+                        </p>
+                        <div className="flex items-center gap-2 mt-4 text-primary font-medium text-sm">
+                          <MessageCircle className="h-4 w-4" />
+                          Request Service
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
                       </div>
                     </Card>
                   </Link>
-                </motion.div>;
-          })}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

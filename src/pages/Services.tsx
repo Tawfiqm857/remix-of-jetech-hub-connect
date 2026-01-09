@@ -22,6 +22,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ImageCarousel from "@/components/ImageCarousel";
 
 const WHATSAPP_NUMBER = "2348107941349";
 
@@ -34,20 +35,17 @@ const iconMap: Record<string, React.ReactNode> = {
   TrendingUp: <TrendingUp className="h-8 w-8" />,
 };
 
-const serviceImages: Record<string, string> = {
-  Truck: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&h=400&fit=crop",
-  Wrench: "https://images.unsplash.com/photo-1597424216802-9e2d07b44c91?w=600&h=400&fit=crop",
-  Globe: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
-  Palette: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop",
-  Layout: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
-  TrendingUp: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-};
+interface ServiceImage {
+  image_url: string;
+  display_order: number;
+}
 
 interface Service {
   id: string;
   name: string;
   description: string;
   icon: string | null;
+  service_images: ServiceImage[];
 }
 
 interface Profile {
@@ -70,13 +68,26 @@ const Services = () => {
   const fetchServices = async () => {
     const { data, error } = await supabase
       .from("services")
-      .select("*")
+      .select(`
+        *,
+        service_images (
+          image_url,
+          display_order
+        )
+      `)
       .order("created_at", { ascending: true });
 
     if (error) {
       console.error("Error fetching services:", error);
     } else {
-      setServices(data || []);
+      // Sort service_images by display_order
+      const servicesWithSortedImages = (data || []).map(service => ({
+        ...service,
+        service_images: (service.service_images || []).sort(
+          (a: ServiceImage, b: ServiceImage) => a.display_order - b.display_order
+        )
+      }));
+      setServices(servicesWithSortedImages);
     }
     setLoading(false);
   };
@@ -157,6 +168,15 @@ Please let me know how to proceed.`;
     "Competitive and transparent pricing",
     "Quality guarantee on all work",
   ];
+
+  // Get images for carousel
+  const getServiceImages = (service: Service): string[] => {
+    if (service.service_images && service.service_images.length > 0) {
+      return service.service_images.map(img => img.image_url);
+    }
+    // Fallback to default image
+    return ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=450&fit=crop"];
+  };
 
   return (
     <Layout>
@@ -299,17 +319,15 @@ Please let me know how to proceed.`;
                   className="border-border/50 bg-card hover-lift hover-glow flex flex-col group animate-fade-up overflow-hidden"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {/* Service Image */}
-                  <div className="aspect-video overflow-hidden relative">
-                    <img 
-                      src={service.icon && serviceImages[service.icon] 
-                        ? serviceImages[service.icon] 
-                        : "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"}
+                  {/* Service Image Carousel */}
+                  <div className="relative">
+                    <ImageCarousel
+                      images={getServiceImages(service)}
                       alt={service.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      autoPlayInterval={3000}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent z-10 pointer-events-none" />
+                    <div className="absolute bottom-4 left-4 z-20">
                       <div className="w-14 h-14 rounded-xl bg-accent/90 flex items-center justify-center text-accent-foreground shadow-lg">
                         {service.icon && iconMap[service.icon]
                           ? iconMap[service.icon]
@@ -401,42 +419,55 @@ Please let me know how to proceed.`;
                 Need a Custom Solution?
               </h2>
               <p className="text-primary-foreground/90 text-lg mb-8 animate-fade-up stagger-1">
-                Contact us directly to discuss your specific needs and get a personalized quote. Our team is ready to help you with any tech challenge.
+                Our team is ready to discuss your specific requirements and provide tailored solutions for your tech needs.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up stagger-2">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="text-lg px-8 h-14 hover:-translate-y-0.5 transition-all duration-300"
-                  onClick={() => {
-                    const message = encodeURIComponent("Hello JE Tech Hub 👋\n\nI have a custom project inquiry and would like to discuss it further.");
-                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
-                  }}
-                >
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  Chat with Us
-                </Button>
-              </div>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="text-lg px-8 h-14 animate-fade-up stagger-2"
+                onClick={() => {
+                  const message = encodeURIComponent("Hello JE Tech Hub 👋\n\nI would like to discuss a custom solution for my tech needs.");
+                  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+                }}
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Let's Talk
+              </Button>
             </div>
             
             <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-6 text-primary-foreground">
-                  <Phone className="h-8 w-8 mb-3" />
-                  <h3 className="font-semibold mb-1">Call Us</h3>
-                  <p className="text-sm text-primary-foreground/80">+234 810 794 1349</p>
-                </Card>
-                <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-6 text-primary-foreground">
-                  <Mail className="h-8 w-8 mb-3" />
-                  <h3 className="font-semibold mb-1">Email Us</h3>
-                  <p className="text-sm text-primary-foreground/80">info@jetechhub.com</p>
-                </Card>
-                <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-6 text-primary-foreground col-span-2">
-                  <Clock className="h-8 w-8 mb-3" />
-                  <h3 className="font-semibold mb-1">Working Hours</h3>
-                  <p className="text-sm text-primary-foreground/80">Mon - Sat: 9:00 AM - 6:00 PM</p>
-                </Card>
-              </div>
+              <Card className="bg-card/95 backdrop-blur-sm p-8 animate-fade-up stagger-2">
+                <h3 className="text-xl font-heading font-semibold text-foreground mb-6">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Phone</p>
+                      <p className="font-medium text-foreground">+234 810 794 1349</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium text-foreground">contact@jetechhub.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Working Hours</p>
+                      <p className="font-medium text-foreground">Mon - Sat: 9AM - 6PM</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
