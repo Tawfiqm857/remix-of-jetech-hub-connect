@@ -96,12 +96,12 @@ export const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 mt-0.5 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
-                  123 Tech Street, Lagos, Nigeria
+                 Suit 4,Along Doma Fueling Station,Gwagwalada,Abuja,Nigeria
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent" />
-                <span className="text-primary-foreground/80 text-sm">+234 800 123 4567</span>
+                <span className="text-primary-foreground/80 text-sm">+234 810 794 1349</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-accent" />
