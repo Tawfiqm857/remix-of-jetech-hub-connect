@@ -372,48 +372,7 @@ const About = () => {
 
       {/* Team Section */}
       <section className="py-20 md:py-28 bg-secondary/30">
-        <div className="container mx-auto px-4 h">
-          <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-              Leadership
-            </span>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-              Meet Our Team
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Passionate educators and industry experts dedicated to your success
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {teamMembers.map((member, index) => <motion.div key={member.name} initial={{
-            opacity: 0,
-            y: 30
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} transition={{
-            duration: 0.5,
-            delay: index * 0.1
-          }}>
-                <Card className="border-border/50 overflow-hidden group">
-                  <div className="relative overflow-hidden">
-                    <img src={member.image} alt={member.name} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                  <CardContent className="p-6 text-center">
-                    <h3 className="font-heading font-bold text-lg text-foreground mb-1">
-                      {member.name}
-                    </h3>
-                    <p className="text-accent font-medium text-sm mb-3">{member.role}</p>
-                    <p className="text-muted-foreground text-sm">{member.bio}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>)}
-          </div>
-        </div>
+        
       </section>
 
       {/* Certificates Section */}
