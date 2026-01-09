@@ -284,47 +284,84 @@ const Admin = () => {
   };
 
   const handleSaveProduct = async () => {
-    if (!productForm.name || !productForm.price || !productForm.category) {
-      toast({ title: "Validation Error", description: "Name, price, and category are required", variant: "destructive" });
+    const allowedCategories = ["Phone", "PC", "Other"] as const;
+
+    if (!productForm.name.trim() || !productForm.price || !productForm.category) {
+      toast({
+        title: "Validation Error",
+        description: "Name, price, and category are required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const parsedPrice = Number(productForm.price);
+    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
+      toast({
+        title: "Validation Error",
+        description: "Price must be a valid number greater than 0",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!allowedCategories.includes(productForm.category as (typeof allowedCategories)[number])) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a valid category (Phone, PC, or Other)",
+        variant: "destructive",
+      });
       return;
     }
 
     setSavingProduct(true);
-    const productData = {
-      name: productForm.name,
-      price: parseFloat(productForm.price),
-      category: productForm.category,
-      description: productForm.description || null,
-      image_url: productForm.image_url || null,
-      in_stock: productForm.in_stock,
-      swap_available: productForm.swap_available,
-    };
 
-    if (editingGadget) {
-      const { error } = await supabase
-        .from("gadgets")
-        .update(productData)
-        .eq("id", editingGadget.id);
+    try {
+      const productData = {
+        name: productForm.name.trim(),
+        price: parsedPrice,
+        category: productForm.category,
+        description: productForm.description?.trim() ? productForm.description.trim() : null,
+        image_url: productForm.image_url?.trim() ? productForm.image_url.trim() : null,
+        in_stock: productForm.in_stock,
+        swap_available: productForm.swap_available,
+      };
 
-      if (error) {
-        toast({ title: "Error", description: "Failed to update product", variant: "destructive" });
+      if (editingGadget) {
+        const { error } = await supabase
+          .from("gadgets")
+          .update(productData)
+          .eq("id", editingGadget.id);
+
+        if (error) {
+          toast({
+            title: "Error",
+            description: error.message || "Failed to update product",
+            variant: "destructive",
+          });
+        } else {
+          toast({ title: "Success", description: "Product updated successfully" });
+          setProductDialogOpen(false);
+          fetchAllData();
+        }
       } else {
-        toast({ title: "Success", description: "Product updated successfully" });
-        setProductDialogOpen(false);
-        fetchAllData();
-      }
-    } else {
-      const { error } = await supabase.from("gadgets").insert([productData]);
+        const { error } = await supabase.from("gadgets").insert([productData]);
 
-      if (error) {
-        toast({ title: "Error", description: "Failed to add product", variant: "destructive" });
-      } else {
-        toast({ title: "Success", description: "Product added successfully" });
-        setProductDialogOpen(false);
-        fetchAllData();
+        if (error) {
+          toast({
+            title: "Error",
+            description: error.message || "Failed to add product",
+            variant: "destructive",
+          });
+        } else {
+          toast({ title: "Success", description: "Product added successfully" });
+          setProductDialogOpen(false);
+          fetchAllData();
+        }
       }
+    } finally {
+      setSavingProduct(false);
     }
-    setSavingProduct(false);
   };
 
   const toggleGadgetStock = async (gadgetId: string, inStock: boolean) => {
@@ -1082,13 +1119,11 @@ const Admin = () => {
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select" />
                                 </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Phones">Phones</SelectItem>
-                                  <SelectItem value="Laptops">Laptops</SelectItem>
-                                  <SelectItem value="Accessories">Accessories</SelectItem>
-                                  <SelectItem value="Tablets">Tablets</SelectItem>
-                                  <SelectItem value="Audio">Audio</SelectItem>
-                                </SelectContent>
+                                 <SelectContent>
+                                   <SelectItem value="Phone">Phones</SelectItem>
+                                   <SelectItem value="PC">PCs</SelectItem>
+                                   <SelectItem value="Other">Other</SelectItem>
+                                 </SelectContent>
                               </Select>
                             </div>
                           </div>
