@@ -49,10 +49,10 @@ export const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <Link to="/" className="inline-block">
-              <img src={logo} alt="JE Tech Hub" className="h-14 w-auto brightness-0 invert" />
+              <img src={logo} alt="Joe Express Tech Hub - Gwagwalada, Abuja" className="h-14 w-auto brightness-0 invert" />
             </Link>
             <p className="text-primary-foreground/80 text-sm leading-relaxed">
-              Empowering Nigerians with tech skills and quality gadgets. Learn, grow, and succeed with JE Tech Hub.
+              Joe Express Tech Hub - Empowering Gwagwalada and Abuja with tech skills and quality gadgets. Learn, grow, and succeed with us.
             </p>
             <div className="flex gap-3">
               

@@ -27,6 +27,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, Link } from "react-router-dom";
+import { SEOHead, FAQSchema, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 
 interface Gadget {
   id: string;
@@ -191,10 +192,43 @@ const Gadgets = () => {
     }).format(price);
   };
 
+  // Gadgets page FAQs
+  const gadgetFaqs = [
+    {
+      question: "Where can I buy phones in Gwagwalada?",
+      answer: "Joe Express Tech Hub in Gwagwalada, Abuja sells quality phones, laptops, and gadgets at competitive prices. Visit our store at Suit 4, Along Doma Fueling Station."
+    },
+    {
+      question: "Can I swap my old phone for a new one in Gwagwalada?",
+      answer: "Yes! We offer gadget swapping services at our Gwagwalada location. Bring your old device for assessment and get an upgrade at a discounted price."
+    },
+    {
+      question: "Do you sell laptops in Gwagwalada?",
+      answer: "Yes, we sell quality laptops for personal and business use at Joe Express Tech Hub, Gwagwalada. We offer competitive prices and warranty on all devices."
+    },
+    {
+      question: "What payment methods do you accept?",
+      answer: "We accept cash, bank transfers, and installment payments for gadget purchases at our Gwagwalada store. Contact us for flexible payment options."
+    }
+  ];
+
   return (
     <Layout>
+      {/* SEO */}
+      <SEOHead
+        title="Buy Phones & Laptops in Gwagwalada, Abuja | Gadget Sales, Swap & Repairs"
+        description="Buy quality phones, laptops, and gadgets at Joe Express Tech Hub in Gwagwalada, Abuja. Best prices, gadget swapping available, and warranty on all devices. Visit our store today!"
+        keywords="buy phones Gwagwalada, laptop sales Abuja, gadgets Gwagwalada, phone swap Abuja, buy laptops Gwagwalada, phone shop Gwagwalada, gadget store Abuja"
+        canonical="https://jetechhub.com/gadgets"
+      />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://jetechhub.com" },
+        { name: "Gadgets", url: "https://jetechhub.com/gadgets" }
+      ]} />
+      <FAQSchema faqs={gadgetFaqs} />
+
       {/* Hero Section */}
-      <section className="relative hero-gradient text-primary-foreground overflow-hidden">
+      <section className="relative hero-gradient text-primary-foreground overflow-hidden" aria-label="Quality Gadgets in Gwagwalada">
         <div className="absolute inset-0 african-pattern opacity-10" />
         <div className="absolute inset-0 glow-effect" />
         
@@ -202,18 +236,19 @@ const Gadgets = () => {
         <div className="absolute inset-0 opacity-20">
           <img 
             src="https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1920&h=800&fit=crop"
-            alt="Modern gadgets and electronics"
+            alt="Phones and gadgets for sale in Gwagwalada"
             className="w-full h-full object-cover"
+            loading="eager"
           />
         </div>
         
         <div className="container mx-auto px-4 py-20 md:py-28 relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4 animate-fade-up">
-              Quality Gadgets
+              Buy Phones & Gadgets in Gwagwalada, Abuja
             </h1>
             <p className="text-lg text-primary-foreground/90 animate-fade-up stagger-1">
-              Phones, laptops, and more at competitive prices. Swap your old device for an upgrade!
+              Quality phones, laptops, and gadgets at competitive prices. Swap your old device for an upgrade at Joe Express Tech Hub!
             </p>
           </div>
         </div>

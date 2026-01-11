@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Target, Eye, Users, Award, BookOpen, Lightbulb, Heart, Rocket, CheckCircle2, ArrowRight, Briefcase, GraduationCap, Globe } from "lucide-react";
+import { SEOHead, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 const values = [{
   icon: BookOpen,
   title: "Hands-On Learning",
@@ -86,11 +87,23 @@ const staggerContainer = {
 };
 const About = () => {
   return <Layout>
+      {/* SEO */}
+      <SEOHead
+        title="About Joe Express Tech Hub | Tech Training Center in Gwagwalada, Abuja"
+        description="Learn about Joe Express Tech Hub, the leading tech training center and gadget store in Gwagwalada, Abuja, Nigeria. Since 2018, we've trained 5000+ students in Software Development, Data Analysis, UI/UX Design. Visit our Gwagwalada location today!"
+        keywords="about Joe Express Tech Hub, tech hub Gwagwalada, tech training center Abuja, tech education Nigeria, JE Tech Hub history, tech school Gwagwalada"
+        canonical="https://jetechhub.com/about"
+      />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://jetechhub.com" },
+        { name: "About", url: "https://jetechhub.com/about" }
+      ]} />
+
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden" aria-label="About Joe Express Tech Hub">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop" alt="Team collaboration" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop" alt="Joe Express Tech Hub team in Gwagwalada" className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/70" />
           <div className="absolute inset-0 african-pattern opacity-5" />
         </div>
@@ -107,14 +120,14 @@ const About = () => {
             duration: 0.6
           }}>
               <span className="inline-block px-4 py-1.5 bg-accent/20 text-accent rounded-full text-sm font-medium mb-6">
-                About Us
+                About Joe Express Tech Hub
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6 leading-tight">
-                Empowering Nigeria's
+                Empowering Gwagwalada's
                 <span className="text-accent"> Tech Future</span>
               </h1>
               <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
-                Since 2018, we've been on a mission to transform lives through quality tech education. Join thousands who've launched successful careers with JE TechHub.
+                Since 2018, Joe Express Tech Hub in Gwagwalada, Abuja has been on a mission to transform lives through quality tech education. Join 5000+ students who've launched successful careers with us.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/courses">

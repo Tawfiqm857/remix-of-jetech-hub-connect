@@ -23,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import ImageCarousel from "@/components/ImageCarousel";
+import { SEOHead, FAQSchema, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 
 const WHATSAPP_NUMBER = "2348107941349";
 
@@ -178,16 +179,50 @@ Please let me know how to proceed.`;
     return ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=450&fit=crop"];
   };
 
+  // Services page FAQs
+  const serviceFaqs = [
+    {
+      question: "What tech services do you offer in Gwagwalada?",
+      answer: "We offer phone repair, software development, website and app development, graphic design, data analysis services, and delivery services at our Gwagwalada, Abuja location."
+    },
+    {
+      question: "How long does phone repair take in Gwagwalada?",
+      answer: "Most phone repairs at Joe Express Tech Hub are completed within 24 hours. Complex repairs may take 2-3 days. We use quality parts and offer warranty on repairs."
+    },
+    {
+      question: "Do you build websites for businesses in Abuja?",
+      answer: "Yes! We provide professional website and mobile app development services for businesses in Gwagwalada, Abuja, and across Nigeria. Contact us for a free consultation."
+    },
+    {
+      question: "How can I request a service?",
+      answer: "You can request any service through our website, visit our Gwagwalada office, or contact us via WhatsApp at +234 810 794 1349. We respond within 24 hours."
+    }
+  ];
+
   return (
     <Layout>
+      {/* SEO */}
+      <SEOHead
+        title="Tech Services in Gwagwalada, Abuja | Phone Repair, Website Development, Software Services"
+        description="Professional tech services at Joe Express Tech Hub in Gwagwalada, Abuja. Phone repair, website development, software development, graphic design, and delivery services. Fast turnaround and quality guaranteed!"
+        keywords="phone repair Gwagwalada, website developers Abuja, software development services Gwagwalada, tech services Abuja, app development Gwagwalada, graphic design services Abuja"
+        canonical="https://jetechhub.com/services"
+      />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://jetechhub.com" },
+        { name: "Services", url: "https://jetechhub.com/services" }
+      ]} />
+      <FAQSchema faqs={serviceFaqs} />
+
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden" aria-label="Professional Tech Services">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&h=1080&fit=crop"
-            alt="Professional tech services"
+            alt="Professional tech services in Gwagwalada"
             className="w-full h-full object-cover"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30" />
@@ -202,15 +237,15 @@ Please let me know how to proceed.`;
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 opacity-0 animate-fade-up border border-primary/20">
                 <Wrench className="h-4 w-4" />
-                <span className="text-sm font-medium">Professional Services</span>
+                <span className="text-sm font-medium">Professional Services in Gwagwalada</span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6 opacity-0 animate-fade-up stagger-1 leading-[1.1]">
                 Expert Tech{" "}
                 <span className="text-primary">Services</span>{" "}
-                <span className="text-accent">For You</span>
+                <span className="text-accent">in Gwagwalada</span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 opacity-0 animate-fade-up stagger-2 leading-relaxed">
-                From gadget repairs to digital solutions, our professional team delivers quality services tailored to your needs.
+                From gadget repairs to website development, our professional team at Joe Express Tech Hub delivers quality services tailored to your needs in Gwagwalada, Abuja.
               </p>
               
               {/* Benefits List */}

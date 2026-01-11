@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import LiveChatWidget from "@/components/LiveChatWidget";
 import { z } from "zod";
+import { SEOHead, FAQSchema, LocalBusinessSchema, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 
 // Validation schema matching database trigger constraints
 const contactSchema = z.object({
@@ -135,10 +136,44 @@ const Contact = () => {
     },
   ];
 
+  // Contact page FAQs
+  const contactFaqs = [
+    {
+      question: "Where is Joe Express Tech Hub located?",
+      answer: "We are located at Suit 4, Along Doma Fueling Station, Gwagwalada, Abuja, Nigeria. Easy to find and accessible by public transport."
+    },
+    {
+      question: "What are your business hours?",
+      answer: "We are open Monday to Friday 9AM-6PM and Saturday 10AM-4PM. Closed on Sundays. You can always reach us via WhatsApp."
+    },
+    {
+      question: "How can I contact Joe Express Tech Hub?",
+      answer: "You can call us at +234 810 794 1349, email Jetechhub@gmail.com, or visit our Gwagwalada office. We also respond quickly on WhatsApp."
+    },
+    {
+      question: "Do you offer free consultations?",
+      answer: "Yes! We offer free consultations for all our services. Visit our Gwagwalada location or contact us online to schedule a consultation."
+    }
+  ];
+
   return (
     <Layout>
+      {/* SEO */}
+      <SEOHead
+        title="Contact Joe Express Tech Hub | Visit Us in Gwagwalada, Abuja"
+        description="Contact Joe Express Tech Hub in Gwagwalada, Abuja. Visit our office at Suit 4, Along Doma Fueling Station. Call +234 810 794 1349 or email Jetechhub@gmail.com. We're here to help with tech training, gadget sales, and services!"
+        keywords="contact Joe Express Tech Hub, tech hub Gwagwalada address, phone number JE Tech Hub, email JE Tech Hub, visit tech hub Abuja, Gwagwalada tech center location"
+        canonical="https://jetechhub.com/contact"
+      />
+      <LocalBusinessSchema />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://jetechhub.com" },
+        { name: "Contact", url: "https://jetechhub.com/contact" }
+      ]} />
+      <FAQSchema faqs={contactFaqs} />
+
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden" aria-label="Contact Joe Express Tech Hub">
         {/* Animated Background */}
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute inset-0 african-pattern opacity-5" />

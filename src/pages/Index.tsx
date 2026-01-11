@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import heroBackground from "@/assets/hero-background.jpg";
 import ImageCarousel from "@/components/ImageCarousel";
+import { SEOHead, LocalBusinessSchema, OrganizationSchema, FAQSchema, BUSINESS_INFO } from "@/components/seo";
 
 interface CourseImage {
   image_url: string;
@@ -183,9 +184,40 @@ const Index = () => {
     Layout: BookOpen,
     TrendingUp: TrendingUp
   };
+  // Homepage FAQs for Schema
+  const homeFaqs = [
+    {
+      question: "Where is Joe Express Tech Hub located?",
+      answer: "Joe Express Tech Hub is located at Suit 4, Along Doma Fueling Station, Gwagwalada, Abuja, Nigeria. We are easily accessible and open Monday to Friday 9AM-6PM and Saturday 10AM-4PM."
+    },
+    {
+      question: "What tech courses do you offer in Gwagwalada?",
+      answer: "We offer professional training in Software Development, Data Analysis, UI/UX Design, Graphics Design, and AI-generated Content Creation. All courses include hands-on projects and verified certificates."
+    },
+    {
+      question: "Do you sell and repair phones in Gwagwalada?",
+      answer: "Yes! We sell quality phones, laptops, and gadgets. We also offer phone repair services and gadget swapping options at competitive prices in Gwagwalada, Abuja."
+    },
+    {
+      question: "Can I swap my old phone for a new one?",
+      answer: "Absolutely! We offer gadget swapping services where you can trade in your old device for an upgrade. Visit our Gwagwalada location for device assessment and swap options."
+    }
+  ];
+
   return <Layout>
+      {/* SEO Meta Tags */}
+      <SEOHead
+        title="Joe Express Tech Hub | Tech Training, Phone Sales & Repairs in Gwagwalada, Abuja"
+        description="Joe Express Tech Hub in Gwagwalada, Abuja offers professional tech training (Software Development, Data Analysis, UI/UX, Graphics Design), phone and laptop sales, gadget swapping, repairs, and website development. Join 5000+ students who launched their tech careers with us!"
+        keywords="tech hub Gwagwalada, software development training Gwagwalada, data analysis training Abuja, UI UX design training Abuja, graphics design training Gwagwalada, buy phones Gwagwalada, phone repair Gwagwalada, laptop sales Abuja, gadget swap Gwagwalada, website developers Gwagwalada"
+        canonical="https://jetechhub.com/"
+      />
+      <LocalBusinessSchema />
+      <OrganizationSchema />
+      <FAQSchema faqs={homeFaqs} />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center overflow-hidden" aria-label="Welcome to Joe Express Tech Hub">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img src={heroBackground} alt="Tech Education" className="w-full h-full object-cover" />
@@ -273,10 +305,10 @@ const Index = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
                 </span>
-                <span className="text-sm font-semibold tracking-wide">🇳🇬 Nigeria's #1 Tech Education Hub</span>
+                <span className="text-sm font-semibold tracking-wide">🇳🇬 Gwagwalada's Premier Tech Hub</span>
               </motion.div>
               
-              {/* Main Headline */}
+              {/* Main Headline - H1 for SEO */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white mb-8 leading-[1.05]">
                 <motion.span className="block" initial={{
                 opacity: 0,
@@ -323,7 +355,7 @@ const Index = () => {
             }} transition={{
               delay: 0.7
             }}>
-                Join <span className="text-accent font-bold">5,000+</span> Nigerians who've transformed their lives with our hands-on training, expert mentorship, and industry-recognized certificates.
+                Join <span className="text-accent font-bold">5,000+</span> students in Gwagwalada and Abuja who've transformed their lives with our hands-on training, expert mentorship, and industry-recognized certificates at Joe Express Tech Hub.
               </motion.p>
               
               {/* CTA Buttons */}
