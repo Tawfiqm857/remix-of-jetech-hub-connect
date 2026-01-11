@@ -18,6 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, Link } from "react-router-dom";
 import ImageCarousel from "@/components/ImageCarousel";
+import { SEOHead, FAQSchema, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 
 interface CourseImage {
   image_url: string;
@@ -163,10 +164,43 @@ const Courses = () => {
     return course.image_url ? [course.image_url] : [];
   };
 
+  // Course page FAQs
+  const courseFaqs = [
+    {
+      question: "What tech training courses are available in Gwagwalada?",
+      answer: "We offer Software Development, Data Analysis, UI/UX Design, Graphics Design, and AI Content Creation courses at our Gwagwalada, Abuja location. All courses include hands-on projects and verified certificates."
+    },
+    {
+      question: "How much do the courses cost?",
+      answer: "Course prices vary: UI/UX Design and Graphics Design are ₦150,000, Data Analysis is ₦200,000. Contact us for current pricing and payment plans available at our Gwagwalada center."
+    },
+    {
+      question: "Do I get a certificate after completing a course?",
+      answer: "Yes! All courses at Joe Express Tech Hub include verified certificates upon completion. Our certificates are recognized by employers across Nigeria."
+    },
+    {
+      question: "Can beginners enroll in these courses?",
+      answer: "Absolutely! Our courses cater to all skill levels from complete beginners to advanced learners. Our expert instructors in Gwagwalada will guide you through every step."
+    }
+  ];
+
   return (
     <Layout>
+      {/* SEO */}
+      <SEOHead
+        title="Tech Training Courses in Gwagwalada, Abuja | Software Development, Data Analysis, UI/UX"
+        description="Enroll in professional tech training courses at Joe Express Tech Hub in Gwagwalada, Abuja. Learn Software Development, Data Analysis, UI/UX Design, Graphics Design with hands-on projects and certified instructors. Get verified certificates!"
+        keywords="tech training Gwagwalada, software development course Abuja, data analysis training Gwagwalada, UI UX design course Abuja, graphics design training Gwagwalada, tech courses Abuja, coding bootcamp Nigeria"
+        canonical="https://jetechhub.com/courses"
+      />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://jetechhub.com" },
+        { name: "Courses", url: "https://jetechhub.com/courses" }
+      ]} />
+      <FAQSchema faqs={courseFaqs} />
+
       {/* Hero Section */}
-      <section className="relative hero-gradient text-primary-foreground overflow-hidden">
+      <section className="relative hero-gradient text-primary-foreground overflow-hidden" aria-label="Tech Training Courses">
         <div className="absolute inset-0 african-pattern opacity-10" />
         <div className="absolute inset-0 glow-effect" />
         
@@ -174,18 +208,19 @@ const Courses = () => {
         <div className="absolute inset-0 opacity-20">
           <img 
             src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1920&h=800&fit=crop"
-            alt="Programming and coding"
+            alt="Tech training classroom in Gwagwalada"
             className="w-full h-full object-cover"
+            loading="eager"
           />
         </div>
         
         <div className="container mx-auto px-4 py-20 md:py-28 relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4 animate-fade-up">
-              Our Courses
+              Tech Training Courses in Gwagwalada, Abuja
             </h1>
             <p className="text-lg text-primary-foreground/90 animate-fade-up stagger-1">
-              Practical, hands-on training to launch your tech career. All courses include verified certificates.
+              Practical, hands-on training at Joe Express Tech Hub to launch your tech career. Software Development, Data Analysis, UI/UX Design, and more. All courses include verified certificates.
             </p>
           </div>
         </div>
