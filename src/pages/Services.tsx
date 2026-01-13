@@ -206,11 +206,11 @@ Please let me know how to proceed.`;
         title="Tech Services in Gwagwalada, Abuja | Phone Repair, Website Development, Software Services"
         description="Professional tech services at Joe Express Tech Hub in Gwagwalada, Abuja. Phone repair, website development, software development, graphic design, and delivery services. Fast turnaround and quality guaranteed!"
         keywords="phone repair Gwagwalada, website developers Abuja, software development services Gwagwalada, tech services Abuja, app development Gwagwalada, graphic design services Abuja"
-        canonical="https://jetechhub.com/services"
+        canonical="https://www.joexpresstechhub.com/services"
       />
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://jetechhub.com" },
-        { name: "Services", url: "https://jetechhub.com/services" }
+        { name: "Home", url: "https://www.joexpresstechhub.com" },
+        { name: "Services", url: "https://www.joexpresstechhub.com/services" }
       ]} />
       <FAQSchema faqs={serviceFaqs} />
 

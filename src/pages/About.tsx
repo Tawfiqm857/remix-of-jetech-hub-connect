@@ -92,11 +92,11 @@ const About = () => {
         title="About Joe Express Tech Hub | Tech Training Center in Gwagwalada, Abuja"
         description="Learn about Joe Express Tech Hub, the leading tech training center and gadget store in Gwagwalada, Abuja, Nigeria. Since 2018, we've trained 5000+ students in Software Development, Data Analysis, UI/UX Design. Visit our Gwagwalada location today!"
         keywords="about Joe Express Tech Hub, tech hub Gwagwalada, tech training center Abuja, tech education Nigeria, JE Tech Hub history, tech school Gwagwalada"
-        canonical="https://jetechhub.com/about"
+        canonical="https://www.joexpresstechhub.com/about"
       />
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://jetechhub.com" },
-        { name: "About", url: "https://jetechhub.com/about" }
+        { name: "Home", url: "https://www.joexpresstechhub.com" },
+        { name: "About", url: "https://www.joexpresstechhub.com/about" }
       ]} />
 
       {/* Hero Section */}

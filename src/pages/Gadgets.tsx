@@ -219,11 +219,11 @@ const Gadgets = () => {
         title="Buy Phones & Laptops in Gwagwalada, Abuja | Gadget Sales, Swap & Repairs"
         description="Buy quality phones, laptops, and gadgets at Joe Express Tech Hub in Gwagwalada, Abuja. Best prices, gadget swapping available, and warranty on all devices. Visit our store today!"
         keywords="buy phones Gwagwalada, laptop sales Abuja, gadgets Gwagwalada, phone swap Abuja, buy laptops Gwagwalada, phone shop Gwagwalada, gadget store Abuja"
-        canonical="https://jetechhub.com/gadgets"
+        canonical="https://www.joexpresstechhub.com/gadgets"
       />
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://jetechhub.com" },
-        { name: "Gadgets", url: "https://jetechhub.com/gadgets" }
+        { name: "Home", url: "https://www.joexpresstechhub.com" },
+        { name: "Gadgets", url: "https://www.joexpresstechhub.com/gadgets" }
       ]} />
       <FAQSchema faqs={gadgetFaqs} />
 

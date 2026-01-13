@@ -5,7 +5,7 @@ export const BUSINESS_INFO = {
   name: "Joe Express Tech Hub",
   alternateName: "JE Tech Hub",
   description: "Joe Express Tech Hub offers professional tech training courses including Software Development, Data Analysis, UI/UX Design, Graphics Design, and AI-generated content. We also provide phone and gadget sales, swapping, repairs, website development, and delivery services in Gwagwalada, Abuja, Nigeria.",
-  url: "https://jetechhub.com",
+  url: "https://www.joexpresstechhub.com",
   phone: "+234 810 794 1349",
   email: "Jetechhub@gmail.com",
   address: {

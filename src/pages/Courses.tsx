@@ -191,11 +191,11 @@ const Courses = () => {
         title="Tech Training Courses in Gwagwalada, Abuja | Software Development, Data Analysis, UI/UX"
         description="Enroll in professional tech training courses at Joe Express Tech Hub in Gwagwalada, Abuja. Learn Software Development, Data Analysis, UI/UX Design, Graphics Design with hands-on projects and certified instructors. Get verified certificates!"
         keywords="tech training Gwagwalada, software development course Abuja, data analysis training Gwagwalada, UI UX design course Abuja, graphics design training Gwagwalada, tech courses Abuja, coding bootcamp Nigeria"
-        canonical="https://jetechhub.com/courses"
+        canonical="https://www.joexpresstechhub.com/courses"
       />
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://jetechhub.com" },
-        { name: "Courses", url: "https://jetechhub.com/courses" }
+        { name: "Home", url: "https://www.joexpresstechhub.com" },
+        { name: "Courses", url: "https://www.joexpresstechhub.com/courses" }
       ]} />
       <FAQSchema faqs={courseFaqs} />
 
