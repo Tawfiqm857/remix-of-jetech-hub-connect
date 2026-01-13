@@ -1,5 +1,5 @@
 # Joe Express Tech Hub - Gwagwalada, Abuja, Nigeria
-# https://jetechhub.com
+# https://www.joexpresstechhub.com
 
 User-agent: Googlebot
 Allow: /
@@ -25,4 +25,4 @@ Disallow: /dashboard
 Disallow: /auth
 
 # Sitemap
-Sitemap: https://jetechhub.com/sitemap.xml
+Sitemap: https://www.joexpresstechhub.com/sitemap.xml

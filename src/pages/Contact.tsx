@@ -163,12 +163,12 @@ const Contact = () => {
         title="Contact Joe Express Tech Hub | Visit Us in Gwagwalada, Abuja"
         description="Contact Joe Express Tech Hub in Gwagwalada, Abuja. Visit our office at Suit 4, Along Doma Fueling Station. Call +234 810 794 1349 or email Jetechhub@gmail.com. We're here to help with tech training, gadget sales, and services!"
         keywords="contact Joe Express Tech Hub, tech hub Gwagwalada address, phone number JE Tech Hub, email JE Tech Hub, visit tech hub Abuja, Gwagwalada tech center location"
-        canonical="https://jetechhub.com/contact"
+        canonical="https://www.joexpresstechhub.com/contact"
       />
       <LocalBusinessSchema />
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://jetechhub.com" },
-        { name: "Contact", url: "https://jetechhub.com/contact" }
+        { name: "Home", url: "https://www.joexpresstechhub.com" },
+        { name: "Contact", url: "https://www.joexpresstechhub.com/contact" }
       ]} />
       <FAQSchema faqs={contactFaqs} />
 

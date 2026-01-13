@@ -210,7 +210,7 @@ const Index = () => {
         title="Joe Express Tech Hub | Tech Training, Phone Sales & Repairs in Gwagwalada, Abuja"
         description="Joe Express Tech Hub in Gwagwalada, Abuja offers professional tech training (Software Development, Data Analysis, UI/UX, Graphics Design), phone and laptop sales, gadget swapping, repairs, and website development. Join 5000+ students who launched their tech careers with us!"
         keywords="tech hub Gwagwalada, software development training Gwagwalada, data analysis training Abuja, UI UX design training Abuja, graphics design training Gwagwalada, buy phones Gwagwalada, phone repair Gwagwalada, laptop sales Abuja, gadget swap Gwagwalada, website developers Gwagwalada"
-        canonical="https://jetechhub.com/"
+        canonical="https://www.joexpresstechhub.com/"
       />
       <LocalBusinessSchema />
       <OrganizationSchema />
