@@ -94,56 +94,56 @@ const Index = () => {
   };
   const testimonials = [{
     name: "Adaeze Okonkwo",
-    role: "Frontend Developer at Paystack",
-    content: "JE Tech Hub transformed my career. The hands-on approach and mentorship helped me land my dream job within 3 months of completing the course.",
+    role: "Software Developer",
+    content: "JE Tech Hub transformed my career. The hands-on approach and expert mentorship helped me build real-world skills that employers value.",
     avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop"
   }, {
     name: "Emeka Nnamdi",
-    role: "UI/UX Designer at Andela",
-    content: "The UI/UX Design Masterclass gave me practical skills that I use every day. The certificate opened doors I never thought possible.",
+    role: "UI/UX Designer",
+    content: "The practical training at JE Tech Hub gave me confidence and competence. I now work on projects that make a real difference.",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
   }, {
     name: "Fatima Ibrahim",
-    role: "Data Analyst at MTN",
-    content: "From zero coding experience to a data analyst role - JE Tech Hub made it possible. The community support was incredible throughout my journey.",
+    role: "Data Analyst",
+    content: "From beginner to professional - JE Tech Hub made it possible. The community support and quality training exceeded my expectations.",
     avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
   }];
   const features = [{
     icon: Award,
-    title: "Industry Certificates",
-    description: "Earn credentials recognized by top employers",
+    title: "Verified Certificates",
+    description: "Earn credentials recognized by employers across Nigeria",
     color: "bg-amber-500/10 text-amber-500"
   }, {
     icon: Users,
     title: "Expert Mentors",
-    description: "Learn from professionals with real experience",
+    description: "Learn from experienced trainers with industry knowledge",
     color: "bg-blue-500/10 text-blue-500"
   }, {
     icon: Briefcase,
-    title: "Job Placement",
-    description: "95% of graduates employed within 6 months",
+    title: "Real-World Impact",
+    description: "Practical projects that prepare you for actual careers",
     color: "bg-emerald-500/10 text-emerald-500"
   }, {
     icon: Play,
-    title: "Hands-On Projects",
+    title: "Hands-On Learning",
     description: "Build portfolio-worthy projects as you learn",
     color: "bg-rose-500/10 text-rose-500"
   }];
   const stats = [{
-    value: 5000,
+    value: 1400,
     suffix: "+",
-    label: "Students Trained",
+    label: "Individuals Trained",
     icon: Users
   }, {
-    value: 95,
-    suffix: "%",
-    label: "Job Placement",
+    value: 30,
+    suffix: "+",
+    label: "Skilled Graduates",
     icon: Briefcase
   }, {
-    value: 50,
+    icon: Globe,
+    value: 5,
     suffix: "+",
-    label: "Industry Partners",
-    icon: Globe
+    label: "Years Experience",
   }, {
     value: 6,
     suffix: "",
@@ -157,11 +157,11 @@ const Index = () => {
   }, {
     icon: TrendingUp,
     title: "Career Growth",
-    description: "Get personalized career coaching and job placement assistance after graduation."
+    description: "Get personalized career coaching and mentorship to help you succeed."
   }, {
     icon: Clock,
-    title: "Flexible Learning",
-    description: "Learn at your own pace with 24/7 access to course materials and resources."
+    title: "Practical Training",
+    description: "Hands-on learning with real-world tools and industry-relevant projects."
   }];
   const fadeInUp = {
     initial: {
@@ -187,29 +187,29 @@ const Index = () => {
   // Homepage FAQs for Schema
   const homeFaqs = [
     {
-      question: "Where is Joe Express Tech Hub located?",
-      answer: "Joe Express Tech Hub is located at Suit 4, Along Doma Fueling Station, Gwagwalada, Abuja, Nigeria. We are easily accessible and open Monday to Friday 9AM-6PM and Saturday 10AM-4PM."
+      question: "Where is JE Tech Hub located?",
+      answer: "JE Tech Hub is located at Suit 4, Along Doma Fueling Station, Gwagwalada, Abuja, Nigeria. We are easily accessible and open Monday to Friday 9AM-6PM and Saturday 10AM-4PM."
     },
     {
-      question: "What tech courses do you offer in Gwagwalada?",
-      answer: "We offer professional training in Software Development, Data Analysis, UI/UX Design, Graphics Design, and AI-generated Content Creation. All courses include hands-on projects and verified certificates."
+      question: "What tech courses do you offer?",
+      answer: "We offer professional training in Software Development, Data Analysis, UI/UX Design, Graphics Design, and AI Content Creation. All courses include hands-on projects and verified certificates."
     },
     {
-      question: "Do you sell and repair phones in Gwagwalada?",
-      answer: "Yes! We sell quality phones, laptops, and gadgets. We also offer phone repair services and gadget swapping options at competitive prices in Gwagwalada, Abuja."
+      question: "Do you offer phone repair services?",
+      answer: "Yes! We provide professional diagnostics and repair services for smartphones and electronic gadgets at competitive prices."
     },
     {
-      question: "Can I swap my old phone for a new one?",
-      answer: "Absolutely! We offer gadget swapping services where you can trade in your old device for an upgrade. Visit our Gwagwalada location for device assessment and swap options."
+      question: "Can beginners enroll in your courses?",
+      answer: "Absolutely! Our courses cater to all skill levels from complete beginners to advanced learners. Our expert instructors will guide you through every step."
     }
   ];
 
   return <Layout>
       {/* SEO Meta Tags */}
       <SEOHead
-        title="Joe Express Tech Hub | Tech Training, Phone Sales & Repairs in Gwagwalada, Abuja"
-        description="Joe Express Tech Hub in Gwagwalada, Abuja offers professional tech training (Software Development, Data Analysis, UI/UX, Graphics Design), phone and laptop sales, gadget swapping, repairs, and website development. Join 5000+ students who launched their tech careers with us!"
-        keywords="tech hub Gwagwalada, software development training Gwagwalada, data analysis training Abuja, UI UX design training Abuja, graphics design training Gwagwalada, buy phones Gwagwalada, phone repair Gwagwalada, laptop sales Abuja, gadget swap Gwagwalada, website developers Gwagwalada"
+        title="JE Tech Hub | Technology Training & Professional Services in Nigeria"
+        description="JE Tech Hub is a leading technology and innovation hub in Nigeria. We offer hands-on training in Software Development, Data Analysis, UI/UX Design, plus professional tech services. Empowering individuals and businesses with cutting-edge technology solutions."
+        keywords="tech hub Nigeria, technology training Nigeria, software development training, data analysis course, UI UX design Nigeria, tech services Nigeria, IT skills training, digital education Nigeria, innovation hub"
         canonical="https://www.joexpresstechhub.com/"
       />
       <LocalBusinessSchema />
@@ -305,7 +305,7 @@ const Index = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
                 </span>
-                <span className="text-sm font-semibold tracking-wide">🇳🇬 Gwagwalada's Premier Tech Hub</span>
+                <span className="text-sm font-semibold tracking-wide">🇳🇬 Nigeria's Premier Tech & Innovation Hub</span>
               </motion.div>
               
               {/* Main Headline - H1 for SEO */}
@@ -319,7 +319,7 @@ const Index = () => {
               }} transition={{
                 delay: 0.4
               }}>
-                  Master Tech Skills.
+                  We Provide Services
                 </motion.span>
                 <motion.span className="block text-accent drop-shadow-lg" initial={{
                 opacity: 0,
@@ -330,18 +330,7 @@ const Index = () => {
               }} transition={{
                 delay: 0.5
               }}>
-                  Get Certified.
-                </motion.span>
-                <motion.span className="block bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent" initial={{
-                opacity: 0,
-                y: 30
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                delay: 0.6
-              }}>
-                  Launch Your Career.
+                  You Can Trust
                 </motion.span>
               </h1>
               
@@ -355,7 +344,7 @@ const Index = () => {
             }} transition={{
               delay: 0.7
             }}>
-                Join <span className="text-accent font-bold">5,000+</span> students in Gwagwalada and Abuja who've transformed their lives with our hands-on training, expert mentorship, and industry-recognized certificates at Joe Express Tech Hub.
+                Empowering individuals and businesses with cutting-edge technology solutions through practical education and professional services. From beginners to professionals, we provide practical solutions that create real impact.
               </motion.p>
               
               {/* CTA Buttons */}
@@ -401,15 +390,15 @@ const Index = () => {
                 </div>
                 <div className="flex items-center gap-2 text-white/90">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-accent" />
+                    <Users className="w-5 h-5 text-accent" />
                   </div>
-                  <span className="text-sm font-medium">95% Job Placement</span>
+                  <span className="text-sm font-medium">1,400+ Trained</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/90">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
                     <Star className="w-5 h-5 text-accent" />
                   </div>
-                  <span className="text-sm font-medium">5-Star Rated</span>
+                  <span className="text-sm font-medium">Trusted by Learners</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -513,7 +502,7 @@ const Index = () => {
           }} viewport={{
             once: true
           }}>
-              Why Choose Us
+              Bridging Education & Technology
             </motion.span>
             <motion.h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4" initial={{
             opacity: 0,
@@ -526,8 +515,8 @@ const Index = () => {
           }} transition={{
             delay: 0.1
           }}>
-              Transform Your Career With
-              <span className="text-primary"> JE TechHub</span>
+              Technology Education That
+              <span className="text-primary"> Creates Impact</span>
             </motion.h2>
             <motion.p className="text-muted-foreground text-lg" initial={{
             opacity: 0,
@@ -540,7 +529,7 @@ const Index = () => {
           }} transition={{
             delay: 0.2
           }}>
-              Join thousands of successful graduates who have launched their tech careers
+              We believe technology education should be accessible, practical, and transformative. Our modern learning environment encourages creativity, collaboration, and problem-solving.
             </motion.p>
           </div>
           
@@ -704,14 +693,14 @@ const Index = () => {
             duration: 0.6
           }}>
               <span className="inline-block px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium mb-4">
-                Why Students Love Us
+                Our Impact
               </span>
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-6">
-                Everything You Need to
-                <span className="text-accent"> Succeed in Tech</span>
+                Building Skills That
+                <span className="text-accent"> Drive Innovation</span>
               </h2>
               <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
-                We provide more than just courses—we offer a complete ecosystem for your tech career success, from learning to landing your dream job.
+                We deliver technology education and professional services designed to meet real-world needs, helping individuals and businesses grow through innovation.
               </p>
 
               <div className="space-y-6">
@@ -769,8 +758,8 @@ const Index = () => {
                       <Award className="w-7 h-7 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-2xl font-heading font-bold text-foreground">95%</p>
-                      <p className="text-muted-foreground text-sm">Employment Rate</p>
+                      <p className="text-2xl font-heading font-bold text-foreground">30+</p>
+                      <p className="text-muted-foreground text-sm">Skilled Graduates</p>
                     </div>
                   </div>
                 </motion.div>
@@ -1013,7 +1002,7 @@ const Index = () => {
           }} transition={{
             delay: 0.1
           }}>
-              What Our Students Say
+              What Our Learners Say
             </motion.h2>
             <motion.p className="text-muted-foreground text-lg" initial={{
             opacity: 0,
@@ -1026,7 +1015,7 @@ const Index = () => {
           }} transition={{
             delay: 0.2
           }}>
-              Hear from graduates who transformed their careers with JE TechHub
+              Trusted by learners, professionals, and organizations across Nigeria
             </motion.p>
           </div>
           
@@ -1084,11 +1073,11 @@ const Index = () => {
             <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-6 leading-tight">
-                  Ready to Start Your
-                  <span className="text-accent"> Tech Journey?</span>
+                  Ready to Get
+                  <span className="text-accent"> Started?</span>
                 </h2>
                 <p className="text-lg md:text-xl text-white/80 mb-10 leading-relaxed">
-                  Join thousands of students who have transformed their careers with JE TechHub. Get certified, get skilled, get ahead.
+                  Join a thriving community of learners and professionals. Let JE Tech Hub help you build skills, scale ideas, and achieve success in the digital economy.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg h-14 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 gap-2">
