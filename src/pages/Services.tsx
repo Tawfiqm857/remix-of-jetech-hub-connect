@@ -164,10 +164,11 @@ Please let me know how to proceed.`;
   };
 
   const benefits = [
-    "Expert technicians with years of experience",
-    "Fast turnaround time on all services",
-    "Competitive and transparent pricing",
-    "Quality guarantee on all work",
+    "Practical, hands-on learning approach",
+    "Industry-relevant skills and training",
+    "Experienced trainers and mentors",
+    "Strong community and support system",
+    "Focus on innovation and real-world impact",
   ];
 
   // Get images for carousel
@@ -182,20 +183,20 @@ Please let me know how to proceed.`;
   // Services page FAQs
   const serviceFaqs = [
     {
-      question: "What tech services do you offer in Gwagwalada?",
-      answer: "We offer phone repair, software development, website and app development, graphic design, data analysis services, and delivery services at our Gwagwalada, Abuja location."
+      question: "What tech services do you offer?",
+      answer: "We offer software development, technology training, phone and gadget repairs, delivery and logistics services, and tech & digital services including branding and graphic design."
     },
     {
-      question: "How long does phone repair take in Gwagwalada?",
-      answer: "Most phone repairs at Joe Express Tech Hub are completed within 24 hours. Complex repairs may take 2-3 days. We use quality parts and offer warranty on repairs."
+      question: "How long does phone repair take?",
+      answer: "Most phone repairs at JE Tech Hub are completed within 24 hours. Complex repairs may take 2-3 days. We use quality parts and offer warranty on repairs."
     },
     {
-      question: "Do you build websites for businesses in Abuja?",
-      answer: "Yes! We provide professional website and mobile app development services for businesses in Gwagwalada, Abuja, and across Nigeria. Contact us for a free consultation."
+      question: "Do you build websites for businesses?",
+      answer: "Yes! We provide professional website and mobile app development services for businesses across Nigeria. Contact us for a free consultation."
     },
     {
       question: "How can I request a service?",
-      answer: "You can request any service through our website, visit our Gwagwalada office, or contact us via WhatsApp at +234 810 794 1349. We respond within 24 hours."
+      answer: "You can request any service through our website, visit our office, or contact us via WhatsApp at +234 810 794 1349. We respond within 24 hours."
     }
   ];
 
@@ -203,9 +204,9 @@ Please let me know how to proceed.`;
     <Layout>
       {/* SEO */}
       <SEOHead
-        title="Tech Services in Gwagwalada, Abuja | Phone Repair, Website Development, Software Services"
-        description="Professional tech services at Joe Express Tech Hub in Gwagwalada, Abuja. Phone repair, website development, software development, graphic design, and delivery services. Fast turnaround and quality guaranteed!"
-        keywords="phone repair Gwagwalada, website developers Abuja, software development services Gwagwalada, tech services Abuja, app development Gwagwalada, graphic design services Abuja"
+        title="Professional Tech Services in Nigeria | Software Development, Repairs & Digital Solutions"
+        description="Comprehensive technology solutions at JE Tech Hub. Software development, technology training, phone repairs, delivery services, and digital branding. Expert technicians with quality guarantee."
+        keywords="software development Nigeria, tech services Nigeria, phone repair services, website development Nigeria, app development, graphic design services, digital solutions Nigeria"
         canonical="https://www.joexpresstechhub.com/services"
       />
       <BreadcrumbSchema items={[
@@ -220,7 +221,7 @@ Please let me know how to proceed.`;
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&h=1080&fit=crop"
-            alt="Professional tech services in Gwagwalada"
+            alt="Professional tech services"
             className="w-full h-full object-cover"
             loading="eager"
           />
@@ -237,19 +238,20 @@ Please let me know how to proceed.`;
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 opacity-0 animate-fade-up border border-primary/20">
                 <Wrench className="h-4 w-4" />
-                <span className="text-sm font-medium">Professional Services in Gwagwalada</span>
+                <span className="text-sm font-medium">Comprehensive Technology Solutions</span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6 opacity-0 animate-fade-up stagger-1 leading-[1.1]">
-                Expert Tech{" "}
-                <span className="text-primary">Services</span>{" "}
-                <span className="text-accent">in Gwagwalada</span>
+                Our{" "}
+                <span className="text-primary">Professional</span>{" "}
+                <span className="text-accent">Services</span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 opacity-0 animate-fade-up stagger-2 leading-relaxed">
-                From gadget repairs to website development, our professional team at Joe Express Tech Hub delivers quality services tailored to your needs in Gwagwalada, Abuja.
+                Comprehensive technology solutions designed for growth. From software development to repairs and digital services, our professional team delivers quality results.
               </p>
               
               {/* Benefits List */}
               <div className="space-y-3 mb-8 opacity-0 animate-fade-up stagger-3">
+                <h3 className="font-semibold text-foreground">Why Choose JE Tech Hub</h3>
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex items-center gap-3 justify-center lg:justify-start">
                     <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
@@ -454,7 +456,7 @@ Please let me know how to proceed.`;
                 Need a Custom Solution?
               </h2>
               <p className="text-primary-foreground/90 text-lg mb-8 animate-fade-up stagger-1">
-                Our team is ready to discuss your specific requirements and provide tailored solutions for your tech needs.
+                Our team is ready to discuss your specific requirements and provide tailored solutions for your technology needs.
               </p>
               <Button
                 size="lg"

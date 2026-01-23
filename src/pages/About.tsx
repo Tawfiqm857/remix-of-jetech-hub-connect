@@ -8,39 +8,39 @@ import { Target, Eye, Users, Award, BookOpen, Lightbulb, Heart, Rocket, CheckCir
 import { SEOHead, BreadcrumbSchema, BUSINESS_INFO } from "@/components/seo";
 const values = [{
   icon: BookOpen,
-  title: "Hands-On Learning",
-  description: "We believe in learning by doing. Every course includes practical projects and real-world applications.",
+  title: "Responsibility",
+  description: "We take ownership of quality and delivery, ensuring every learner gets the best experience.",
   color: "bg-blue-500/10 text-blue-500"
 }, {
   icon: Lightbulb,
-  title: "Innovation",
-  description: "We stay current with the latest industry trends and technologies to give you relevant skills.",
+  title: "Professionalism",
+  description: "Our expertise defines our standards. We maintain the highest level of service in everything we do.",
   color: "bg-amber-500/10 text-amber-500"
 }, {
   icon: Heart,
-  title: "Community",
-  description: "Our supportive community of learners and mentors helps you grow and succeed together.",
+  title: "Communication",
+  description: "We collaborate closely with learners to turn expectations into results.",
   color: "bg-rose-500/10 text-rose-500"
 }, {
   icon: Rocket,
-  title: "Excellence",
-  description: "We are committed to delivering high-quality education that meets international standards.",
+  title: "Efficiency",
+  description: "We deliver fast, effective, and reliable solutions that meet real-world needs.",
   color: "bg-emerald-500/10 text-emerald-500"
 }];
 const milestones = [{
-  value: 5000,
+  value: 1400,
   suffix: "+",
-  label: "Students Trained",
+  label: "Individuals Trained",
   icon: GraduationCap
 }, {
-  value: 95,
-  suffix: "%",
-  label: "Job Placement Rate",
+  value: 30,
+  suffix: "+",
+  label: "Skilled Graduates",
   icon: Briefcase
 }, {
-  value: 50,
+  value: 5,
   suffix: "+",
-  label: "Industry Partners",
+  label: "Years Experience",
   icon: Globe
 }, {
   value: 6,
@@ -52,7 +52,7 @@ const teamMembers = [{
   name: "Joseph Emmanuel",
   role: "Founder & CEO",
   image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-  bio: "Former software engineer with 10+ years experience building tech talent."
+  bio: "Former software engineer with years of experience building tech talent."
 }, {
   name: "Adaeze Okonkwo",
   role: "Head of Training",
@@ -64,7 +64,7 @@ const teamMembers = [{
   image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop&crop=face",
   bio: "Full-stack developer and mentor with expertise in modern web technologies."
 }];
-const achievements = ["Best Tech Training Center - Lagos Tech Awards 2023", "Top 10 EdTech Startups in Nigeria - TechCabal", "Google Developer Community Partner", "Microsoft Certified Training Partner"];
+const achievements = ["2018 – Started as JE Gadgets, trained 28 individuals in smartphone repair", "2022-2023 – Partnered with NITDA, trained 1,000-1,400 participants", "2023 – Rebranded to JE Tech Hub with full IT training programs", "Present – 30+ graduates, expanding community outreach and partnerships"];
 const fadeInUp = {
   initial: {
     opacity: 0,
@@ -89,9 +89,9 @@ const About = () => {
   return <Layout>
       {/* SEO */}
       <SEOHead
-        title="About Joe Express Tech Hub | Tech Training Center in Gwagwalada, Abuja"
-        description="Learn about Joe Express Tech Hub, the leading tech training center and gadget store in Gwagwalada, Abuja, Nigeria. Since 2018, we've trained 5000+ students in Software Development, Data Analysis, UI/UX Design. Visit our Gwagwalada location today!"
-        keywords="about Joe Express Tech Hub, tech hub Gwagwalada, tech training center Abuja, tech education Nigeria, JE Tech Hub history, tech school Gwagwalada"
+        title="About JE Tech Hub | Technology Training & Innovation Hub in Nigeria"
+        description="Learn about JE Tech Hub, a forward-thinking technology training and services center in Nigeria. Since 2018, we've trained over 1,400 individuals in Software Development, Data Analysis, UI/UX Design. Connecting education with industry-relevant skills."
+        keywords="about JE Tech Hub, tech hub Nigeria, tech training center, tech education Nigeria, JE Tech Hub history, technology innovation Nigeria, IT skills training"
         canonical="https://www.joexpresstechhub.com/about"
       />
       <BreadcrumbSchema items={[
@@ -100,10 +100,10 @@ const About = () => {
       ]} />
 
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden" aria-label="About Joe Express Tech Hub">
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden" aria-label="About JE Tech Hub">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop" alt="Joe Express Tech Hub team in Gwagwalada" className="w-full h-full object-cover" loading="eager" />
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop" alt="JE Tech Hub team" className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/70" />
           <div className="absolute inset-0 african-pattern opacity-5" />
         </div>
@@ -120,14 +120,14 @@ const About = () => {
             duration: 0.6
           }}>
               <span className="inline-block px-4 py-1.5 bg-accent/20 text-accent rounded-full text-sm font-medium mb-6">
-                About Joe Express Tech Hub
+                Who We Are
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6 leading-tight">
-                Empowering Gwagwalada's
-                <span className="text-accent"> Tech Future</span>
+                A Technology Hub Focused on
+                <span className="text-accent"> Skills, Innovation & Impact</span>
               </h1>
               <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
-                Since 2018, Joe Express Tech Hub in Gwagwalada, Abuja has been on a mission to transform lives through quality tech education. Join 5000+ students who've launched successful careers with us.
+                JE Tech Hub is a forward-thinking technology training and services center committed to connecting education with industry-relevant skills. We empower individuals and communities through practical technology education.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/courses">
@@ -198,21 +198,24 @@ const About = () => {
             duration: 0.6
           }}>
               <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-                Our Story
+                Our Journey
               </span>
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-6">
                 From Small Beginnings to
-                <span className="text-primary"> Big Impact</span>
+                <span className="text-primary"> Meaningful Impact</span>
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  JE TechHub was founded in 2018 with a simple yet powerful mission: to make quality tech education accessible to every Nigerian, regardless of background or location.
+                  <strong className="text-foreground">2018 – JE Gadgets:</strong> We began as JE Gadgets, specializing in smartphone repair and diagnostics. During this phase, we trained 28 individuals, many of whom successfully launched their own repair businesses.
                 </p>
                 <p>
-                  What started as a small training center in Lagos has grown into one of Nigeria's most respected tech education institutions. We've trained thousands of students who now work at leading companies across Africa and globally.
+                  <strong className="text-foreground">2022–2023 – NITDA Partnership:</strong> We partnered with NITDA in Kogi and Niger States, training between 1,000 and 1,400 participants in diverse digital and technical skills.
                 </p>
                 <p>
-                  Our approach is different. We don't just teach theory—we focus on hands-on, project-based learning that prepares you for real-world challenges. Every course includes practical projects, mentorship, and career support.
+                  <strong className="text-foreground">2023 – JE Tech Hub:</strong> We rebranded and expanded into full IT and software development training, offering hands-on learning with real-world tools and equipment.
+                </p>
+                <p>
+                  <strong className="text-foreground">Present – Innovation & Growth:</strong> With over 30 graduates, we are focused on expanding community outreach, building strategic partnerships, and establishing an innovation lab to support local tech entrepreneurship.
                 </p>
               </div>
 
@@ -258,8 +261,8 @@ const About = () => {
 
               {/* Floating Badge */}
               <div className="absolute -bottom-6 -left-6 bg-accent text-accent-foreground rounded-2xl p-4 shadow-elevated">
-                <p className="text-3xl font-heading font-bold">6+</p>
-                <p className="text-sm">Years of Excellence</p>
+                <p className="text-3xl font-heading font-bold">5+</p>
+                <p className="text-sm">Years of Impact</p>
               </div>
             </motion.div>
           </div>
@@ -300,7 +303,7 @@ const About = () => {
                     Our Mission
                   </h3>
                   <p className="text-white/85 leading-relaxed">
-                    To equip Nigerians with practical, in-demand tech skills through hands-on training, mentorship, and community support. We bridge the digital skills gap and create pathways to meaningful careers in technology.
+                    In a rapidly changing digital world, JE Tech Hub exists to bridge the gap between traditional education and modern technology demands. We provide learners with the tools, guidance, and confidence needed to thrive in tech-driven industries. Whether you are a beginner, a professional, or an entrepreneur, our mission is to support your growth every step of the way.
                   </p>
                 </CardContent>
               </Card>
@@ -328,7 +331,7 @@ const About = () => {
                     Our Vision
                   </h3>
                   <p className="text-white/85 leading-relaxed">
-                    To be Africa's leading tech education hub, producing world-class tech professionals who drive innovation and economic growth across the continent. A Nigeria where everyone has access to quality tech education.
+                    Shaping the future of technology by raising brilliant minds and skilled professionals. We envision a future where empowered individuals lead innovation, solve real-world challenges, and contribute meaningfully to the global tech ecosystem.
                   </p>
                 </CardContent>
               </Card>
@@ -348,7 +351,7 @@ const About = () => {
               Our Core Values
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              These principles guide everything we do at JE TechHub
+              These principles guide everything we do at JE Tech Hub
             </p>
           </div>
 
@@ -409,10 +412,10 @@ const About = () => {
             }}>
                 <Award className="w-16 h-16 text-accent mb-6" />
                 <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
-                  Earn Industry-Recognized Certificates
+                  Earn Verified Certificates
                 </h2>
                 <p className="text-white/80 text-lg leading-relaxed mb-8">
-                  Every course you complete at JE TechHub comes with an official, verified certificate. Our certificates are recognized by employers across Nigeria and internationally.
+                  Every course you complete at JE Tech Hub comes with an official, verified certificate. Our certificates are recognized by employers across Nigeria and internationally.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Link to="/courses">
@@ -440,7 +443,7 @@ const About = () => {
                     <Award className="w-12 h-12 text-accent" />
                   </div>
                   <p className="text-white font-heading font-bold text-xl mb-2">
-                    JE TechHub Certificate
+                    JE Tech Hub Certificate
                   </p>
                   <p className="text-white/70 text-sm mb-4">
                     of Professional Achievement
@@ -476,7 +479,7 @@ const About = () => {
               <span className="text-primary"> Tech Journey?</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-8">
-              Join thousands of successful graduates who've transformed their careers with JE TechHub. Your future in tech starts here.
+              Join a thriving community of learners and professionals. Let JE Tech Hub help you build skills, scale ideas, and achieve success in the digital economy.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/courses">
