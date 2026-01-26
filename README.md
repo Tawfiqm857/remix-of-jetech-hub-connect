@@ -1,73 +1,48 @@
-# Welcome to your Lovable project
 
-## Project info
+JE Tech Hub Website
+JoeExpress Tech Hub Official Website
+🌐 Live Site: https://www.joeexpresstechhub.com
+Overview
+JE Tech Hub is a Nigeria-based technology and innovation hub dedicated to practical digital skills training, gadgets sales, and technology-driven empowerment. The website serves as the official online platform for showcasing the hub’s programs, certified courses, services, and community impact.
+The site is built with a strong African/Nigerian identity and designed to be professional, accessible, and responsive across all devices.
+Purpose
+Present JE Tech Hub as a credible and professional tech institution
+Showcase available training programs and certified courses
+Enable users to explore gadgets available for sale or swap
+Provide clear calls-to-action for registration and inquiries
+Strengthen the online presence and brand identity of JE Tech Hub
+Key Features
+Fully responsive design (desktop, tablet, and mobile)
+African/Nigerian-themed branding and visuals
+Dedicated pages for:
+Home
+About
+Courses & Certifications
+Gadgets Marketplace (Buy & Swap)
+Contact
+Smooth UI interactions and animations
+SEO-friendly structure
+Custom favicon, logo, and branding assets
+Hosted on a custom domain
+Technologies Used
+React & Tailwind
+Git & GitHub
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Deployment
+The website is live and publicly accessible at:
+https://www.joeexpresstechhub.com
+Future Improvements
+Supabase backend integration
+User authentication (students and customers)
+Online course registration system
+Gadgets purchase and swap request system
+Admin dashboard for managing courses and gadgets
+Certificate verification system
+Contact
+JE Tech Hub
+Nigeria
+🌐 https://www.joeexpresstechhub.com
+For training, partnerships, or inquiries, please use the contact form on the website.
+License
+This project is proprietary and owned by JE Tech Hub.
+Unauthorized reproduction or redistribution without permission is prohibited.
