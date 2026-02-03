@@ -21,6 +21,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import CertificateVerify from "./pages/CertificateVerify";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,8 @@ const App = () => {
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/admin" element={<Admin />} />
+                  <Route path="/verify" element={<CertificateVerify />} />
+                  <Route path="/verify/:certificateId" element={<CertificateVerify />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
