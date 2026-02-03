@@ -49,24 +49,42 @@ export type Database = {
       certificates: {
         Row: {
           certificate_number: string
-          course_id: string
+          course_id: string | null
+          full_name: string | null
           id: string
           issued_at: string
-          user_id: string
+          issuing_organization: string | null
+          passport_url: string | null
+          program: string | null
+          status: string | null
+          training_period: string | null
+          user_id: string | null
         }
         Insert: {
           certificate_number: string
-          course_id: string
+          course_id?: string | null
+          full_name?: string | null
           id?: string
           issued_at?: string
-          user_id: string
+          issuing_organization?: string | null
+          passport_url?: string | null
+          program?: string | null
+          status?: string | null
+          training_period?: string | null
+          user_id?: string | null
         }
         Update: {
           certificate_number?: string
-          course_id?: string
+          course_id?: string | null
+          full_name?: string | null
           id?: string
           issued_at?: string
-          user_id?: string
+          issuing_organization?: string | null
+          passport_url?: string | null
+          program?: string | null
+          status?: string | null
+          training_period?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
