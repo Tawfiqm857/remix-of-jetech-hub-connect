@@ -59,8 +59,10 @@ import {
   Award,
   Upload,
   Image as ImageIcon,
+  FileCheck,
 } from "lucide-react";
 import { AdminNotifications } from "@/components/admin/AdminNotifications";
+import { CertificatesManagement } from "@/components/admin/CertificatesManagement";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -131,6 +133,20 @@ interface StudentAchievement {
   awarded_at: string;
 }
 
+interface Certificate {
+  id: string;
+  certificate_number: string;
+  full_name: string | null;
+  program: string | null;
+  training_period: string | null;
+  passport_url: string | null;
+  issuing_organization: string | null;
+  status: string | null;
+  issued_at: string;
+  user_id: string | null;
+  course_id: string | null;
+}
+
 const Admin = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const navigate = useNavigate();
@@ -144,6 +160,7 @@ const Admin = () => {
   const [gadgets, setGadgets] = useState<Gadget[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [achievements, setAchievements] = useState<StudentAchievement[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingProduct, setSavingProduct] = useState(false);
 
@@ -205,7 +222,7 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     setLoading(true);
-    const [ordersRes, serviceRequestsRes, enrollmentsRes, gadgetsRes, coursesRes, achievementsRes] =
+    const [ordersRes, serviceRequestsRes, enrollmentsRes, gadgetsRes, coursesRes, achievementsRes, certificatesRes] =
       await Promise.all([
         supabase
           .from("orders")
@@ -231,6 +248,10 @@ const Admin = () => {
           .from("student_achievements")
           .select("*")
           .order("awarded_at", { ascending: false }),
+        supabase
+          .from("certificates")
+          .select("*")
+          .order("issued_at", { ascending: false }),
       ]);
 
     setOrders((ordersRes.data as unknown as Order[]) || []);
@@ -239,6 +260,7 @@ const Admin = () => {
     setGadgets((gadgetsRes.data as unknown as Gadget[]) || []);
     setCourses((coursesRes.data as unknown as Course[]) || []);
     setAchievements((achievementsRes.data as unknown as StudentAchievement[]) || []);
+    setCertificates((certificatesRes.data as unknown as Certificate[]) || []);
     setLoading(false);
   };
 
@@ -690,7 +712,7 @@ const Admin = () => {
       {/* Stats */}
       <section className="py-6 bg-background border-b">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             <Card className="border-border/50 hover:shadow-md transition-shadow">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
@@ -769,6 +791,19 @@ const Admin = () => {
                 </div>
               </CardContent>
             </Card>
+            <Card className="border-border/50 hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                    <FileCheck className="w-5 h-5 text-teal-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-heading font-bold">{certificates.length}</p>
+                    <p className="text-muted-foreground text-xs">Certificates</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -784,6 +819,7 @@ const Admin = () => {
               <TabsTrigger value="gadgets">Products</TabsTrigger>
               <TabsTrigger value="achievements">Grades</TabsTrigger>
               <TabsTrigger value="courses">Courses</TabsTrigger>
+              <TabsTrigger value="certificates">Certificates</TabsTrigger>
             </TabsList>
 
             {/* Orders Tab */}
@@ -1768,6 +1804,15 @@ const Admin = () => {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Certificates Tab */}
+            <TabsContent value="certificates">
+              <CertificatesManagement
+                certificates={certificates}
+                onRefresh={fetchAllData}
+                loading={loading}
+              />
             </TabsContent>
           </Tabs>
         </div>
