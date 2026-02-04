@@ -89,7 +89,7 @@ export default function CertificateVerify() {
   };
 
   const getVerificationUrl = (certNumber: string) => {
-    return `${window.location.origin}/verify/${encodeURIComponent(certNumber)}`;
+    return `https://www.joexpresstechhub.com/verify/${encodeURIComponent(certNumber)}`;
   };
 
   return (

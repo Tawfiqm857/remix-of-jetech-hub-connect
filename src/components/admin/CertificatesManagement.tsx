@@ -266,7 +266,7 @@ export const CertificatesManagement = ({
   };
 
   const getVerificationUrl = (certNumber: string) => {
-    return `${window.location.origin}/verify/${encodeURIComponent(certNumber)}`;
+    return `https://www.joexpresstechhub.com/verify/${encodeURIComponent(certNumber)}`;
   };
 
   const formatDate = (date: string) => {
